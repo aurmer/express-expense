@@ -27,3 +27,6 @@ client/package-lock.json
 
 server/node_modules
 server/package-lock.json
+
+db/node_modules
+db/package-lock.json
