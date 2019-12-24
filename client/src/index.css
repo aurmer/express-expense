@@ -6,8 +6,46 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+.navbar-light .navbar-nav .active > .nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show > .nav-link {
+	color: #336726
+}
+.btn {
+  font-weight: bold;
+}
+.btn-facebook {
+  background-color: rgb(59,89,152);
+}
+.btn-facebook:hover {
+  background-color: rgb(59,89,152,.9);
+  border-color: rgb(59,89,152)
+}
+.btn-google {
+  background-color: rgb(66,133,244)
+}
+.btn-google:hover {
+  background-color: rgb(66,133,244,.9);
+  border-color: rgb(66,133,244)
+}
+.btn-github {
+  background-color: rgb(23,21,21);
+}
+.btn-github:hover {
+  background-color: rgb(23,21,21,.9);
+  border-color: rgb(23,21,21)
+}
+.card-header {
+  background-color: #336726;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+}
+.login-card-element {
+  position: absolute;
+  width: 75vw;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
 }
