@@ -12,23 +12,23 @@ function App() {
       <Router>
         <AppNavbar/>
         <div className="container">
-        <Switch>
-          <Route path="/new-expense">
-            <NewExpense/>
-          </Route>
-          <Route path="/dashboard">
-            <h1>Dashboard</h1>
-          </Route>
-          <Route path="/settings">
-            <h1>Settings</h1>
-          </Route>
-          <Route path="/about">
-            <h1>About</h1>
-          </Route>
-          <Route path="/">
-            <Login/>
-          </Route>
-        </Switch>
+          <Switch>
+            <Route path="/new-expense">
+              <NewExpense/>
+            </Route>
+            <Route path="/dashboard">
+              <h1>Dashboard</h1>
+            </Route>
+            <Route path="/settings">
+              <h1>Settings</h1>
+            </Route>
+            <Route path="/about">
+              <h1>About</h1>
+            </Route>
+            <Route path="/">
+              <Login/>
+            </Route>
+          </Switch>
         </div>
       </Router>
     </div>
