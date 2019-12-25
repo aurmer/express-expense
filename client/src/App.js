@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"
 
 import AppNavbar from './components/AppNavbar'
 import Login from './components/Login'
+import NewExpense from './components/NewExpense'
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
         <div className="container">
         <Switch>
           <Route path="/new-expense">
-            <h1>New Expense</h1>
+            <NewExpense/>
           </Route>
           <Route path="/dashboard">
             <h1>Dashboard</h1>
