@@ -1,5 +1,6 @@
 :root {
   --main-brand-color: rgb(51,103,38);
+  --main-brand-color-hover: rgb(51,103,38, .85)
 }
 body {
   margin: 0;
@@ -23,6 +24,11 @@ code {
   font-weight: bold;
   color: white;
   background-color: var(--main-brand-color)
+}
+.btn:hover {
+  font-weight: bold;
+  color: white;
+  background-color: var(--main-brand-color-hover)
 }
 .btn-facebook {
   background-color: rgb(59,89,152);
@@ -72,6 +78,32 @@ form > div {
   position: relative;
   overflow: hidden;
 }
+.receipt-img-container {
+  display: flex;
+  justify-content: center;
+}
+.receipt-img {
+  max-height: 500px;
+}
+.file-input-container {
+  display: flex;
+  justify-content: center;
+}
+.file-input-btn {
+  margin: 10px;
+  width: 200px
+}
+.input-group-btn {
+	position: relative;
+	font-size: 0;
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+  width: 200px !important
+}
+.hide-default-file-input {
+  display: none
+}
 form input, form textarea {
   width: 100%;
   border: 0;
@@ -93,6 +125,13 @@ form input:valid, form textarea:valid {
 form input:focus, form textarea:focus {
   border-color: var(--main-brand-color);
 }
+form input:valid + label, form textarea:valid + label {
+  color: var(--main-brand-color);
+  font-size: 70%;
+  padding: 0px 6px;
+  z-index: 2;
+  text-transform: uppercase;
+}
 form input:focus + label, form textarea:focus + label {
   background: var(--main-brand-color);
   color: white;
@@ -104,7 +143,7 @@ form input:focus + label, form textarea:focus + label {
 form label {
   transition: background 0.3s, color 0.3s, top 0.3s, bottom 0.3s, right 0.3s, left 0.3s;
   position: absolute;
-  color: #999;
+  color: #212529;
   padding: 13px 12px;
   margin: 0;
   border-radius: .25em;
@@ -126,6 +165,13 @@ form.go-bottom input:focus, form.go-bottom textarea:focus {
   padding: 4px 6px 20px 6px;
 }
 form.go-bottom input:focus + label, form.go-bottom textarea:focus + label {
+  top: 100%;
+  margin-top: -16px;
+}
+form.go-bottom input:valid, form.go-bottom textarea:valid {
+  padding: 4px 6px 20px 6px;
+}
+form.go-bottom input:valid + label, form.go-bottom textarea:valid + label {
   top: 100%;
   margin-top: -16px;
 }
@@ -162,4 +208,7 @@ pointer-events: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+}
+.form-save-btn {
+  margin-top: 20px;
 }
