@@ -1,3 +1,7 @@
+:root {
+  --main-brand-color: rgb(51,103,38);
+  --main-brand-color-hover: rgb(51,103,38, .85)
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -6,8 +10,205 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+.navbar-light .navbar-nav .active > .nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show > .nav-link {
+  color: var(--main-brand-color);
+  font-weight: bold;
+}
+
+/* LOGIN CARD STYLING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+.btn {
+  font-weight: bold;
+  color: white;
+  background-color: var(--main-brand-color)
+}
+.btn:hover {
+  font-weight: bold;
+  color: white;
+  background-color: var(--main-brand-color-hover)
+}
+.btn-facebook {
+  background-color: rgb(59,89,152);
+  border-color: rgb(59,89,152)
+}
+.btn-facebook:hover {
+  background-color: rgb(59,89,152,.85);
+  border-color: rgb(59,89,152)
+}
+.btn-google {
+  background-color: rgb(66,133,244);
+  border-color: rgb(66,133,244)
+}
+.btn-google:hover {
+  background-color: rgb(66,133,244,.85);
+  border-color: rgb(66,133,244)
+}
+.btn-github {
+  background-color: rgb(23,21,21);
+  border-color: rgb(23,21,21)
+}
+.btn-github:hover {
+  background-color: rgb(23,21,21,.85);
+  border-color: rgb(23,21,21)
+}
+.card-header {
+  background-color: #336726;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+}
+.login-card-element {
+  position: absolute;
+  width: 300px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* FORM STYLING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+form {
+  margin: 20px;
+}
+.form-input-container {
+  margin: 10px;
+}
+form > div {
+  position: relative;
+  overflow: hidden;
+}
+.receipt-img-container {
+  display: flex;
+  justify-content: center;
+}
+.receipt-img {
+  max-height: 500px;
+}
+.file-input-container {
+  display: flex;
+  justify-content: center;
+}
+.file-input-btn {
+  margin: 10px;
+  width: 200px
+}
+.input-group-btn {
+	position: relative;
+	font-size: 0;
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+  width: 200px !important
+}
+.hide-default-file-input {
+  display: none
+}
+form input, form textarea {
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid var(--main-brand-color);
+  background: none;
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  padding: 8px 12px;
+  outline: 0;
+}
+.form-date input, .form-date textarea{
+  background: white;
+}
+form input:valid, form textarea:valid {
+  background: white;
+}
+form input:focus, form textarea:focus {
+  border-color: var(--main-brand-color);
+}
+form input:valid + label, form textarea:valid + label {
+  color: var(--main-brand-color);
+  font-size: 70%;
+  padding: 0px 6px;
+  z-index: 2;
+  text-transform: uppercase;
+}
+form input:focus + label, form textarea:focus + label {
+  background: var(--main-brand-color);
+  color: white;
+  font-size: 70%;
+  padding: 0px 6px;
+  z-index: 2;
+  text-transform: uppercase;
+}
+form label {
+  transition: background 0.3s, color 0.3s, top 0.3s, bottom 0.3s, right 0.3s, left 0.3s;
+  position: absolute;
+  color: #212529;
+  padding: 13px 12px;
+  margin: 0;
+  border-radius: .25em;
+}
+form textarea {
+  display: block;
+  resize: vertical;
+}
+form.go-bottom input, form.go-bottom textarea {
+  padding: 12px 12px 12px 12px;
+}
+form.go-bottom label {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+form.go-bottom input:focus, form.go-bottom textarea:focus {
+  padding: 4px 6px 20px 6px;
+}
+form.go-bottom input:focus + label, form.go-bottom textarea:focus + label {
+  top: 100%;
+  margin-top: -16px;
+}
+form.go-bottom input:valid, form.go-bottom textarea:valid {
+  padding: 4px 6px 20px 6px;
+}
+form.go-bottom input:valid + label, form.go-bottom textarea:valid + label {
+  top: 100%;
+  margin-top: -16px;
+}
+/* SELECT ELEMENT STYLING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+form select {
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid var(--main-brand-color);
+  padding: 12px 12px;
+}
+/*To remove button from IE11*/
+select::-ms-expand {
+  display: none;
+}
+.form-select-container {
+  position: relative
+}
+.form-select-container:after {
+content: '>';
+font: 17px "Consolas", monospace;
+font-weight: bold;
+color: var(--main-brand-color);
+-webkit-transform: rotate(90deg);
+-moz-transform: rotate(90deg);
+-ms-transform: rotate(90deg);
+transform: rotate(90deg);
+right: 11px;
+top: 12px;
+padding: 0 0 2px;
+position: absolute;
+pointer-events: none;
+}
+.form-select-container select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+.form-save-btn {
+  margin-top: 20px;
 }
