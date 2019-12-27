@@ -8,15 +8,15 @@ const NewExpenseForm = () => {
       <form className="go-bottom">
         <div className="form-input-container">
           <div className="receipt-img-container">
-            <img className="receipt-img" src="https://via.placeholder.com/200x500"></img>
+            <img className="receipt-img hidden" src="" alt="receipt image"></img>
+            <label for="receiptImage" class="receipt">
+            <span className="btn">
+              Upload receipt
+            </span>
+            </label>
           </div>
           <div className="file-input-container">
-            <input type="file" accept="image/*"/>
-            <label className="input-group-btn">
-              <span className="btn file-input-btn">
-                Upload receipt <input type="file" style={{display: "none"}} multiple accept="image/*"/>
-              </span>
-            </label>
+            <input id="receiptImage" type="file" accept="image/*"/>
           </div>
         </div>
         <div className="form-input-container">
