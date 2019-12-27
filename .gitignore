@@ -23,10 +23,7 @@ client/npm-debug.log*
 client/yarn-debug.log*
 client/yarn-error.log*
 
-client/package-lock.json
 
 server/node_modules
-server/package-lock.json
 
 db/node_modules
-db/package-lock.json
