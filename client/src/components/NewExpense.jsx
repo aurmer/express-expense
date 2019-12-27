@@ -11,7 +11,7 @@ const NewExpenseForm = () => {
             <img className="receipt-img" src="https://via.placeholder.com/200x500"></img>
           </div>
           <div className="file-input-container">
-            {/* <input type="file" accept="image/*"/> */}
+            <input type="file" accept="image/*"/>
             <label className="input-group-btn">
               <span className="btn file-input-btn">
                 Upload receipt <input type="file" style={{display: "none"}} multiple accept="image/*"/>
@@ -38,7 +38,7 @@ const NewExpenseForm = () => {
             <option>Luminaire</option>
           </select>
         </div>
-        <Button 
+        <Button
           type="submit"
           block
           className="form-save-btn"
