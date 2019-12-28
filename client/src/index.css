@@ -84,6 +84,12 @@ form > div {
 }
 .receipt-img {
   max-height: 500px;
+  max-width: 100%;
+}
+@media screen and (min-width:720px) {
+  .receipt-img {
+    max-width: 500px;
+  }
 }
 .receipt-img-container>.hidden {
   display: none;
@@ -93,10 +99,17 @@ form > div {
   justify-content: center;
 }
 
+.file-input-container>input::after {
+  content: "Upload Receipt";
+  float: right;
+}
+
 .file-input-btn {
   margin: 0;
   width: 200px;
 }
+
+.fil
 
 .input-group-btn {
 	position: relative;
@@ -177,7 +190,7 @@ form.go-bottom input:focus + label, form.go-bottom textarea:focus + label {
   top: 100%;
   margin-top: -16px;
 }
-form.go-bottom input:valid, form.go-bottom textarea:valid {
+form.go-bottom input:valid:not(type:"file"), form.go-bottom textarea:valid {
   padding: 4px 6px 20px 6px;
 }
 form.go-bottom input:valid + label, form.go-bottom textarea:valid + label {

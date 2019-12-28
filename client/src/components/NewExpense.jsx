@@ -1,6 +1,7 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import Button from 'react-bootstrap/Button'
-
+import { receiptLoaded } from '../redux/actions'
 
 const NewExpenseForm = () => {
   return (
@@ -8,12 +9,7 @@ const NewExpenseForm = () => {
       <form className="go-bottom">
         <div className="form-input-container">
           <div className="receipt-img-container">
-            <img className="receipt-img hidden" src="" alt="receipt image"></img>
-            <label for="receiptImage" class="receipt">
-            <span className="btn">
-              Upload receipt
-            </span>
-            </label>
+            <img className="receipt-img" src="" alt="receipt image"></img>
           </div>
           <div className="file-input-container">
             <input id="receiptImage" type="file" accept="image/*"/>
@@ -50,4 +46,13 @@ const NewExpenseForm = () => {
   )
 }
 
-export default NewExpenseForm
+function mapStateToProps(state) {
+  return {
+    
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  { receiptLoaded }
+)(NewExpenseForm)
