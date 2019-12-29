@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"
 import AppNavbar from './components/AppNavbar'
 import Login from './components/Login'
 import NewExpense from './components/NewExpense'
+import Dashboard from './components/Dashboard'
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
               <NewExpense/>
             </Route>
             <Route path="/dashboard">
-              <h1>Dashboard</h1>
+              <Dashboard/>
             </Route>
             <Route path="/settings">
               <h1>Settings</h1>

@@ -234,3 +234,22 @@ pointer-events: none;
 .form-save-btn {
   margin-top: 20px;
 }
+thead {
+  background-color: var(--main-brand-color);
+  color: #ffffff
+}
+table {
+  text-align: center;
+}
+.table td, .table th {
+  vertical-align: middle;
+}
+@media (max-width: 576px) {
+  body {
+    font-size: .8rem;
+  }
+}
+.receipt-image {
+  width: 25px;
+  margin: 0 5px;
+}
