@@ -1,5 +1,5 @@
 import React from 'react'
-import { connect } from 'react-redux'
+// import { connect } from 'react-redux'
 
 import Table from 'react-bootstrap/Table'
 import ReceiptImage from '../img/receipt.svg'
@@ -27,11 +27,14 @@ const fakeBucketsTable = [
 ]
 
 class Dashboard extends React.Component {
+  state = {
+    userName: ""
+  }
   // THIS FUNCTION TO BE REPLACED WITH CALL TO DB
   generateFakeTableRows() {
     let fakeTableRows = []
     for (let index = 0; index < 10; index++) {
-      console.log(index)
+      // console.log(index)
       fakeTableRows.push({
         category: fakeBucketsTable[0].bucket_name,
         description: fakeExpenseItemsTable[0].receipt_name,
@@ -63,10 +66,20 @@ class Dashboard extends React.Component {
       </tbody>
     )
   }
+  fetchUserName() {
+    fetch("http://localhost:9000/get-user")
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ userName: data.rows[0].first_name })
+      })
+  }
+  componentDidMount() {
+    this.fetchUserName()
+  }
   render() {
     return (
       <div className="container">
-        <h1>Hi, {fakeUserTable.first_name}!</h1>
+        <h1>Hello {this.state.userName}</h1>
         <Table
           bordered
           striped

@@ -6,9 +6,13 @@ exports.seed = function(knex) {
 			// Inserts seed entries
 			return knex('buckets_categories').insert([
 				{
-					bucket_name: 'DigitalCrafts Expenses',
-					total_number_of_expenses: 1,
+					bucket_name: 'DigitalCrafts',
+					total_number_of_expenses: 2,
 				},
+				{
+					bucket_name: 'Luminare',
+					total_number_of_expenses: 1
+				}
 			]);
 		});
 };
