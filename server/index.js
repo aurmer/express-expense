@@ -1,7 +1,11 @@
+require('dotenv').config();
 const express = require('express');
+var cors = require('cors')
 const APP = express();
 const PORT = process.env.PORT || 3000;
 const { db } = require('./db/dbConnection');
+
+APP.use(cors())
 
 function testUsersCall() {
 	const userTableQuery = `
@@ -43,5 +47,15 @@ testBucketCall().then(response => {
 });
 
 APP.get('/', (req, res) => res.send('Hello World!'));
+
+APP.get('/get-user', (req, res, next) => {
+  testUsersCall().then(response => {
+    res.send(response)
+  })
+})
+
+APP.get('/get-expenses', (req, res) => {
+  
+})
 
 APP.listen(PORT, () => console.log(`Expense App listening on port ${PORT}!`));
