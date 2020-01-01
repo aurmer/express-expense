@@ -34,6 +34,14 @@ function testBucketCall() {
 	return db.raw(bucketableQuery);
 }
 
+function getExpenses(userId) {
+  return db.select('receipt_name', 'transaction_detail', 'amount', 'expense_date', 'status', 'tags')
+    .from('expense_item')
+    .where({
+      'user_id':userId
+    })
+}
+
 testUsersCall().then(response => {
 	console.log(response.rows);
 });
@@ -54,8 +62,11 @@ APP.get('/get-user', (req, res, next) => {
   })
 })
 
-APP.get('/get-expenses', (req, res) => {
-  
+APP.get('/get-expenses:id', (req, res) => {
+  console.log('incoming request for expenses for userId: ' + req.params.id)
+  getExpenses(req.params.id).then(expenses => {
+    res.send(expenses)
+  })
 })
 
 APP.listen(PORT, () => console.log(`Expense App listening on port ${PORT}!`));

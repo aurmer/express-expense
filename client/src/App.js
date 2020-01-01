@@ -7,6 +7,8 @@ import Login from './components/Login'
 import NewExpense from './components/NewExpense'
 import Dashboard from './components/Dashboard'
 
+require('dotenv').config();
+
 function App() {
   return (
     <div>
@@ -19,9 +21,6 @@ function App() {
             </Route>
             <Route path="/dashboard">
               <Dashboard/>
-            </Route>
-            <Route path="/settings">
-              <h1>Settings</h1>
             </Route>
             <Route path="/about">
               <h1>About</h1>

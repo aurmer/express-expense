@@ -3,8 +3,9 @@ exports.up = function(knex) {
 		table.increments('id');
 		table.string('receipt_name');
 		table.string('transaction_detail');
-		table.integer('amount');
+		table.decimal('amount', null, 2);
 		table.string('expense_date');
+		table.string('status');
 		table.string('tags');
 		table.timestamps(true, true);
 	});

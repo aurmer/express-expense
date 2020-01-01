@@ -1,6 +1,8 @@
 :root {
   --main-brand-color: rgb(51,103,38);
-  --main-brand-color-hover: rgb(51,103,38, .85)
+  --main-brand-color-hover: rgb(51,103,38, .85);
+  --not-submitted: rgb(167,65,14);
+  --pending: rgb(212, 193, 11);
 }
 body {
   margin: 0;
@@ -18,7 +20,9 @@ code {
   color: var(--main-brand-color);
   font-weight: bold;
 }
-
+.component-container {
+  padding-top: 56px;
+}
 /* LOGIN CARD STYLING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 .btn {
   font-weight: bold;
@@ -234,8 +238,19 @@ pointer-events: none;
 .form-save-btn {
   margin-top: 20px;
 }
+/* HIDE SPECIFIC DASHBOARD COLUMN ON MOBILE */
+/* @media only screen and (max-width: 576px) {
+  td:nth-child(4), th:nth-child(4) {
+    display:none;
+  }
+}
+@media only screen and (min-width: 576px) {
+  td:nth-child(6), th:nth-child(6) {
+    display:none;
+  }
+} */
+/* DASHBOARD STYLING ~~~~~~~~~~~~~~~~~~~~~~~~ */
 thead {
-  background-color: var(--main-brand-color);
   color: #ffffff
 }
 table {
@@ -249,7 +264,16 @@ table {
     font-size: .8rem;
   }
 }
-.receipt-image {
+.receipt-image, .more-image{
   width: 25px;
   margin: 0 5px;
+}
+.not-submitted-header {
+  background-color: var(--not-submitted);
+}
+.pending-header {
+  background-color: var(--pending);
+}
+.paid-header {
+  background-color: var(--main-brand-color);
 }
