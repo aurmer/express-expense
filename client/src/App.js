@@ -1,11 +1,13 @@
 import React from 'react'
 
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 
 import AppNavbar from './components/AppNavbar'
 import Login from './components/Login'
 import NewExpense from './components/NewExpense'
 import Dashboard from './components/Dashboard'
+
+require('dotenv').config();
 
 function App() {
   return (
@@ -19,9 +21,6 @@ function App() {
             </Route>
             <Route path="/dashboard">
               <Dashboard/>
-            </Route>
-            <Route path="/settings">
-              <h1>Settings</h1>
             </Route>
             <Route path="/about">
               <h1>About</h1>

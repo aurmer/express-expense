@@ -1,4 +1,6 @@
+require('dotenv').config();
 const express = require('express');
+var cors = require('cors')
 const APP = express();
 const PORT = process.env.PORT || 3000;
 const { db } = require('./db/dbConnection');
@@ -40,6 +42,8 @@ passport.deserializeUser((obj, cb) => {
 
 // Test DB Connections //
 
+APP.use(cors())
+
 function testUsersCall() {
 	const userTableQuery = `
       SELECT *
@@ -67,6 +71,14 @@ function testBucketCall() {
 	return db.raw(bucketableQuery);
 }
 
+function getExpenses(userId) {
+  return db.select('receipt_name', 'transaction_detail', 'amount', 'expense_date', 'status', 'tags')
+    .from('expense_item')
+    .where({
+      'user_id':userId
+    })
+}
+
 testUsersCall().then(response => {
 	console.log(response.rows);
 });
@@ -80,5 +92,18 @@ testBucketCall().then(response => {
 });
 
 APP.get('/', (req, res) => res.send('Hello World!'));
+
+APP.get('/get-user', (req, res, next) => {
+  testUsersCall().then(response => {
+    res.send(response)
+  })
+})
+
+APP.get('/get-expenses:id', (req, res) => {
+  console.log('incoming request for expenses for userId: ' + req.params.id)
+  getExpenses(req.params.id).then(expenses => {
+    res.send(expenses)
+  })
+})
 
 APP.listen(PORT, () => console.log(`Expense App listening on port ${PORT}!`));
