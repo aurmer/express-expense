@@ -16,7 +16,6 @@ const AppNavbar = () => {
         <Nav>
           <NavLink onClick={() => setExpanded(false)} className="nav-link" to="/new-expense">New Expense</NavLink>       
           <NavLink onClick={() => setExpanded(false)} className="nav-link" to="/dashboard">Dashboard</NavLink>
-          <NavLink onClick={() => setExpanded(false)} className="nav-link" to="/settings">Settings</NavLink>
           <NavLink onClick={() => setExpanded(false)} className="nav-link" to="/about">About</NavLink>
         </Nav>
       </Navbar.Collapse>
