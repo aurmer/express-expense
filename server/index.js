@@ -1,23 +1,30 @@
 require('dotenv').config();
 const express = require('express');
-var cors = require('cors')
+var cors = require('cors');
 const APP = express();
+APP.use(cors());
 const PORT = process.env.PORT || 3000;
 const { db } = require('./db/dbConnection');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
 
-const {GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET} = require('./googleCredentials')
+
 
 passport.use(
 	new GoogleStrategy(
 		{
 			clientID: GOOGLE_CLIENT_ID,
 			clientSecret: GOOGLE_CLIENT_SECRET,
-			callbackURL: 'http://www.example.com/auth/google/callback',
+			callbackURL: 'http://localhost:9000/auth/google/callback',
 		},
 		function(accessToken, refreshToken, profile, done) {
 			User.findOrCreate({ googleId: profile.id }, function(err, user) {
+
+				console.log(user)
+
+
 				return done(err, user);
 			});
 		}
@@ -42,8 +49,6 @@ passport.deserializeUser((obj, cb) => {
 
 // Test DB Connections //
 
-APP.use(cors())
-
 function testUsersCall() {
 	const userTableQuery = `
       SELECT *
@@ -57,7 +62,7 @@ function testExpenseCall() {
 	const expenseTableQuery = `
       SELECT *
         FROM expense_item
-    `;
+	`;
 
 	return db.raw(expenseTableQuery);
 }
@@ -72,38 +77,55 @@ function testBucketCall() {
 }
 
 function getExpenses(userId) {
-  return db.select('receipt_name', 'transaction_detail', 'amount', 'expense_date', 'status', 'tags')
-    .from('expense_item')
-    .where({
-      'user_id':userId
-    })
+	return db
+		.select(
+			'receipt_name',
+			'transaction_detail',
+			'amount',
+			'expense_date',
+			'status',
+			'tags'
+		)
+		.from('expense_item')
+		.where({
+			user_id: userId,
+		});
 }
 
-testUsersCall().then(response => {
-	console.log(response.rows);
-});
+// testUsersCall().then(response => {
+// 	console.log(response.rows);
+// });
 
-testExpenseCall().then(response => {
-	console.log(response.rows);
-});
+// testExpenseCall().then(response => {
+// 	console.log(response.rows);
+// });
 
-testBucketCall().then(response => {
-	console.log(response.rows);
-});
+// testBucketCall().then(response => {
+// 	console.log(response.rows);
+// });
 
 APP.get('/', (req, res) => res.send('Hello World!'));
 
 APP.get('/get-user', (req, res, next) => {
-  testUsersCall().then(response => {
-    res.send(response)
-  })
-})
+	testUsersCall().then(response => {
+		res.send(response);
+	});
+});
 
 APP.get('/get-expenses:id', (req, res) => {
-  console.log('incoming request for expenses for userId: ' + req.params.id)
-  getExpenses(req.params.id).then(expenses => {
-    res.send(expenses)
-  })
-})
+	console.log('incoming request for expenses for userId: ' + req.params.id);
+	getExpenses(req.params.id).then(expenses => {
+		res.send(expenses);
+	});
+});
+
+APP.get('/auth/google',
+	passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
+
+APP.get('/auth/google/callback', 
+passport.authenticate('google', { failureRedirect: '/login' }),
+function(req, res) {
+res.redirect('/');
+});
 
 APP.listen(PORT, () => console.log(`Expense App listening on port ${PORT}!`));

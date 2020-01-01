@@ -5,6 +5,7 @@ exports.up = function(knex) {
 		table.string('last_name');
 		table.string('email');
 		table.string('token');
+		table.string('googleId');
 		table.timestamps(true, true);
 	});
 };
