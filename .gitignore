@@ -26,5 +26,8 @@ client/yarn-error.log*
 
 
 server/node_modules
+server/googleCredentials.js
 
 db/node_modules
+
+.vscode/
