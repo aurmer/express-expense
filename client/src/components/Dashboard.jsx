@@ -4,11 +4,8 @@ import React from 'react'
 import Table from 'react-bootstrap/Table'
 import Accordion from 'react-bootstrap/Accordion'
 import Card from 'react-bootstrap/Card'
-import DropdownButton from 'react-bootstrap/DropdownButton'
-import Dropdown from 'react-bootstrap/Dropdown'
 
-import ReceiptImage from '../img/receipt.svg'
-// import moreImage from '../img/more.svg'
+import ReceiptModal from './ReceiptModal'
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -20,36 +17,39 @@ class Dashboard extends React.Component {
     };
   }
   fetchUserName() {
-    fetch(process.env.REACT_APP_API_SERVER + "/get-user")
+    fetch(process.env.REACT_APP_API_SERVER + "/get-user/" + process.env.REACT_APP_TEST_USER_TOKEN)
       .then(response => response.json())
       .then(data => {
-        this.setState({ greeting: "Hello, " + data.rows[0].first_name + "!" })
+        this.setState({ greeting: "Hello, " + data[0].first_name + "!" })
       })
   }
   fetchExpenses() {
-    fetch(process.env.REACT_APP_API_SERVER + "/get-expenses" + process.env.REACT_APP_TEST_USER_ID)
+    fetch(process.env.REACT_APP_API_SERVER + "/get-expenses/" + process.env.REACT_APP_TEST_USER_ID)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
         this.setState({ expenses: data})
       })
   }
-  renderTable(expenseArray) {
+  renderTable(expenses, status) {
+    let statusSortedExpenses = expenses.reduce((result, expense) => {
+      if (expense.status === status) {
+        result.push(expense)
+      }
+      return result
+    }, [])
     return (
       <tbody>
-        {expenseArray.map((expense, index) => (
+        {statusSortedExpenses.map((expense, index) => (
           <tr key={index}>
           <td>
-            {expense.category}
+            {expense.bucket_name}
           </td>
           <td>
             {expense.receipt_name}
           </td>
           <td>
             {expense.amount}
-            <a href="#">
-              <img className="receipt-image" alt="receipt image" src={ReceiptImage}></img>
-            </a>
+            <ReceiptModal/>
           </td>
           <td>
             {expense.expense_date}
@@ -65,43 +65,33 @@ class Dashboard extends React.Component {
   }
   render() {
     return (
-      <div className="component-container">
-        <h1 style={{height: "48px"}}>{this.state.greeting}</h1>
-        <DropdownButton
-          drop="right"
-          variant="secondary"
-          title="Select Status"
-          id="dropdown-right"
-          key="right"
-        >
-          <Dropdown.Item eventKey="1">Action</Dropdown.Item>
-          <Dropdown.Item eventKey="2">Another action</Dropdown.Item>
-          <Dropdown.Item eventKey="3">Something else here</Dropdown.Item>
-        </DropdownButton>
+      <div>
+        <h1>{this.state.greeting}</h1>
         <Accordion defaultActiveKey="0">
-          <Card >
+          <Card>
             <Accordion.Toggle className="not-submitted-header" as={Card.Header} eventKey="0">
               Not Submitted
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
                 <Table
                   bordered
-                  striped
                   hover
                   size="sm"
                 >
                   <thead className="not-submitted-header">
                     <tr>
-                      <th>Category</th>
-                      <th>Description</th>
-                      <th>Amount</th>
-                      <th>Date</th>
+                      <th style={{witdh: "16.66%"}}>Category</th>
+                      <th style={{witdh: "25%"}}>Description</th>
+                      <th style={{witdh: "50%"}}>Amount</th>
+                      <th style={{witdh: "8.33%"}}>Date</th>
                     </tr>
                   </thead>
-                    {this.renderTable(this.state.expenses)}
+                    {this.renderTable(this.state.expenses, "Not submitted")}
                 </Table>
             </Accordion.Collapse>
           </Card>
+        </Accordion>
+        <Accordion>
           <Card>
             <Accordion.Toggle className="pending-header" as={Card.Header} eventKey="1">
               Pending
@@ -109,7 +99,6 @@ class Dashboard extends React.Component {
             <Accordion.Collapse eventKey="1">
               <Table
                 bordered
-                striped
                 hover
                 size="sm"
               >
@@ -121,10 +110,12 @@ class Dashboard extends React.Component {
                     <th>Date</th>
                   </tr>
                 </thead>
-                  {this.renderTable(this.state.expenses)}
+                  {this.renderTable(this.state.expenses, "Pending")}
               </Table>
             </Accordion.Collapse>
           </Card>
+        </Accordion>
+        <Accordion>
           <Card>
             <Accordion.Toggle className="paid-header" as={Card.Header} eventKey="2">
               Paid
@@ -132,7 +123,6 @@ class Dashboard extends React.Component {
             <Accordion.Collapse eventKey="2">
               <Table
                 bordered
-                striped
                 hover
                 size="sm"
               >
@@ -144,7 +134,7 @@ class Dashboard extends React.Component {
                     <th>Date</th>
                   </tr>
                 </thead>
-                  {this.renderTable(this.state.expenses)}
+                  {this.renderTable(this.state.expenses, "Paid")}
               </Table>
             </Accordion.Collapse>
           </Card>

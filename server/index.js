@@ -7,9 +7,10 @@ const PORT = process.env.PORT || 3000;
 const { db } = require('./db/dbConnection');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const { createNewUser } = require('./db/queryFunctions/userQuery');
+APP.use(cors())
+
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
 
 passport.use(
 	new GoogleStrategy(
@@ -94,20 +95,15 @@ function testBucketCall() {
 	return db.raw(bucketableQuery);
 }
 
+function getUser(token) {
+  return db('users')
+    .where({ 'users.token': token })
+}
+
 function getExpenses(userId) {
-	return db
-		.select(
-			'receipt_name',
-			'transaction_detail',
-			'amount',
-			'expense_date',
-			'status',
-			'tags'
-		)
-		.from('expense_item')
-		.where({
-			user_id: userId,
-		});
+  return db('expense_item')
+    .where({'expense_item.user_id':userId})
+    .join('buckets_categories', 'expense_item.bucket_id', 'buckets_categories.id')
 }
 
 // testUsersCall().then(response => {
@@ -151,6 +147,7 @@ APP.get(
 		console.log('failure redirect')
 		res.redirect('/');
 	}
-);
+)
 
-APP.listen(PORT, () => console.log(`Expense App listening on port ${PORT}!`));
+
+APP.listen(PORT, () => console.log(`Expense App listening on port ${PORT}!`))
