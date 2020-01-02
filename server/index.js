@@ -7,10 +7,9 @@ const PORT = process.env.PORT || 3000;
 const { db } = require('./db/dbConnection');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
-
-
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const { createNewUser } = require('./db/queryFunctions/userQuery');
 
 passport.use(
 	new GoogleStrategy(
@@ -19,14 +18,34 @@ passport.use(
 			clientSecret: GOOGLE_CLIENT_SECRET,
 			callbackURL: 'http://localhost:9000/auth/google/callback',
 		},
-		function(accessToken, refreshToken, profile, done) {
-			User.findOrCreate({ googleId: profile.id }, function(err, user) {
+		(accessToken, refreshToken, profile, done) => {
+			console.log(profile.displayName);
 
-				console.log(user)
-
-				return done(err, user);
-			});
+			db('users')
+				.where({ googleId: profile.id })
+				.then(res => {
+					const user = res[0];
+					if (!user) {
+						db('users').insert({
+							first_name: profile.name.givenName,
+							last_name: profile.name.familyName,
+							googleId: profile.id,
+						});
+					}
+				})
+				.catch(err => {
+					console.error('Local strategy error - ', err);
+					return err;
+				});
 		}
+		// function(accessToken, refreshToken, profile, done) {
+		// 	User.findOrCreate({ googleId: profile.id }, function(err, user) {
+
+		// 		console.log(user)
+
+		// 		return done(err, user);
+		// 	});
+		// }
 	)
 );
 
@@ -103,7 +122,7 @@ function getExpenses(userId) {
 // 	console.log(response.rows);
 // });
 
-APP.get('/', (req, res) => res.send('Hello World!'));
+APP.get('/', (req, res) => res.send('Hello World! - /auth/google'));
 
 APP.get('/get-user', (req, res, next) => {
 	testUsersCall().then(response => {
@@ -118,13 +137,20 @@ APP.get('/get-expenses:id', (req, res) => {
 	});
 });
 
-APP.get('/auth/google',
-	passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
+APP.get(
+	'/auth/google',
+	passport.authenticate('google', {
+		scope: ['https://www.googleapis.com/auth/plus.login'],
+	})
+);
 
-APP.get('/auth/google/callback', 
-passport.authenticate('google', { failureRedirect: '/login' }),
-function(req, res) {
-res.redirect('/');
-});
+APP.get(
+	'/auth/google/callback',
+	passport.authenticate('google', { failureRedirect: '/' }),
+	function(req, res) {
+		console.log('failure redirect')
+		res.redirect('/');
+	}
+);
 
 APP.listen(PORT, () => console.log(`Expense App listening on port ${PORT}!`));
