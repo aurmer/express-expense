@@ -9,7 +9,7 @@ const NewExpenseForm = () => {
       <form className="go-bottom">
         <div className="form-input-container">
           <div className="receipt-img-container">
-            <img className="receipt-img" src="" alt="receipt image"></img>
+            <img className="receipt-img" src="" alt="receipt"></img>
           </div>
           <div className="file-input-container">
             <input id="receiptImage" type="file" accept="image/*"/>
@@ -17,19 +17,19 @@ const NewExpenseForm = () => {
         </div>
         <div className="form-input-container">
           <input id="description" name="description" type="text" required/>
-          <label for="description">Expense Description</label>
+          <label htmlFor="description">Expense Description</label>
         </div>
         <div className="form-input-container">
           <input id="amount" name="amount" type="text" required/>
-          <label for="amount">Expense Amount</label>
+          <label htmlFor="amount">Expense Amount</label>
         </div>
         <div className="form-date form-input-container">
           <input id="date" name="date" type="date" required/>
-          <label for="date">Expense Date</label>
+          <label htmlFor="date">Expense Date</label>
         </div>
         <div className="form-input-container form-select-container">
           <select id="category" name="category">
-            <option value="" selected>Select a category</option>
+            <option value="" defaultValue>Select a category</option>
             <option>DigitalCrafts</option>
             <option>Luminaire</option>
           </select>
@@ -48,7 +48,7 @@ const NewExpenseForm = () => {
 
 function mapStateToProps(state) {
   return {
-    
+
   }
 }
 
