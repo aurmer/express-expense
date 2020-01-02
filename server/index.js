@@ -6,8 +6,10 @@ const PORT = process.env.PORT || 3000;
 const { db } = require('./db/dbConnection');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+APP.use(cors())
 
-const {GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET} = require('./googleCredentials')
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
 
 passport.use(
 	new GoogleStrategy(
@@ -42,7 +44,6 @@ passport.deserializeUser((obj, cb) => {
 
 // Test DB Connections //
 
-APP.use(cors())
 
 function testUsersCall() {
 	const userTableQuery = `
@@ -71,12 +72,15 @@ function testBucketCall() {
 	return db.raw(bucketableQuery);
 }
 
+function getUser(token) {
+  return db('users')
+    .where({ 'users.token': token })
+}
+
 function getExpenses(userId) {
-  return db.select('receipt_name', 'transaction_detail', 'amount', 'expense_date', 'status', 'tags')
-    .from('expense_item')
-    .where({
-      'user_id':userId
-    })
+  return db('expense_item')
+    .where({'expense_item.user_id':userId})
+    .join('buckets_categories', 'expense_item.bucket_id', 'buckets_categories.id')
 }
 
 testUsersCall().then(response => {
@@ -93,13 +97,13 @@ testBucketCall().then(response => {
 
 APP.get('/', (req, res) => res.send('Hello World!'));
 
-APP.get('/get-user', (req, res, next) => {
-  testUsersCall().then(response => {
+APP.get('/get-user/:id', (req, res, next) => {
+  getUser(req.params.id).then(response => {
     res.send(response)
   })
 })
 
-APP.get('/get-expenses:id', (req, res) => {
+APP.get('/get-expenses/:id', (req, res) => {
   console.log('incoming request for expenses for userId: ' + req.params.id)
   getExpenses(req.params.id).then(expenses => {
     res.send(expenses)

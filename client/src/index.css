@@ -2,7 +2,7 @@
   --main-brand-color: rgb(51,103,38);
   --main-brand-color-hover: rgb(51,103,38, .85);
   --not-submitted: rgb(167,65,14);
-  --pending: rgb(212, 193, 11);
+  --pending: rgb(194, 178, 29);
 }
 body {
   margin: 0;
@@ -20,19 +20,26 @@ code {
   color: var(--main-brand-color);
   font-weight: bold;
 }
-.component-container {
-  padding-top: 56px;
+.container {
+  padding: 56px 5px 
 }
 /* LOGIN CARD STYLING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 .btn {
   font-weight: bold;
-  color: white;
+  color: #fff;
   background-color: var(--main-brand-color)
 }
-.btn:hover {
+.btn:hover, .btn:focus, .btn.focus, .btn:active, .btn.active {
   font-weight: bold;
-  color: white;
-  background-color: var(--main-brand-color-hover)
+  color: #fff;
+  background-color: var(--main-brand-color-hover);
+  border-color: var(--main-brand-color)
+}
+.btn-primary:not(:disabled):not(.disabled).active,
+.btn-primary:not(:disabled):not(.disabled):active {
+  color:#fff;
+  background-color: var(--main-brand-color);
+  border-color: var(--main-brand-color)
 }
 .btn-facebook {
   background-color: rgb(59,89,152);
@@ -102,19 +109,14 @@ form > div {
   display: flex;
   justify-content: center;
 }
-
 .file-input-container>input::after {
   content: "Upload Receipt";
   float: right;
 }
-
 .file-input-btn {
   margin: 0;
   width: 200px;
 }
-
-.fil
-
 .input-group-btn {
 	position: relative;
 	font-size: 0;
@@ -250,11 +252,24 @@ pointer-events: none;
   }
 } */
 /* DASHBOARD STYLING ~~~~~~~~~~~~~~~~~~~~~~~~ */
+h1 {
+  height: 48px
+}
 thead {
   color: #ffffff
 }
 table {
   text-align: center;
+  table-layout: fixed;
+}
+th:nth-child(1) {
+  width: 28%
+}
+th:nth-child(3), th:nth-child(4) {
+  width: 20%
+}
+.table {
+  margin-bottom: 0
 }
 .table td, .table th {
   vertical-align: middle;
@@ -264,9 +279,18 @@ table {
     font-size: .8rem;
   }
 }
-.receipt-image, .more-image{
-  width: 25px;
+.receipt-icon {
+  width: 20px;
   margin: 0 5px;
+  cursor: pointer;
+}
+.receipt-image-container {
+  display: flex;
+  align-content: center;
+}
+.receipt-image {
+  max-width: 95%;
+  margin: 0 auto;
 }
 .not-submitted-header {
   background-color: var(--not-submitted);
