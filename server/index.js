@@ -5,12 +5,17 @@ const APP = express();
 APP.use(cors());
 const PORT = process.env.PORT || 3000;
 const { db } = require('./db/dbConnection');
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-APP.use(cors())
+const passport = require('passport'),
+	FacebookStrategy = require('passport-facebook').Strategy,
+	GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+
+const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
+const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
+
+const { findOrCreate } = require('./db/queryFunctions/userQuery');
 
 passport.use(
 	new GoogleStrategy(
@@ -21,32 +26,27 @@ passport.use(
 		},
 		(accessToken, refreshToken, profile, done) => {
 			console.log(profile.displayName);
-
-			db('users')
-				.where({ googleId: profile.id })
-				.then(res => {
-					const user = res[0];
-					if (!user) {
-						db('users').insert({
-							first_name: profile.name.givenName,
-							last_name: profile.name.familyName,
-							googleId: profile.id,
-						});
-					}
-				})
-				.catch(err => {
-					console.error('Local strategy error - ', err);
-					return err;
-				});
+			findOrCreate(profile, function(err, user) {
+				return done(err, user);
+			});
 		}
-		// function(accessToken, refreshToken, profile, done) {
-		// 	User.findOrCreate({ googleId: profile.id }, function(err, user) {
+	)
+);
 
-		// 		console.log(user)
+passport.use(
+	new FacebookStrategy(
+		{
+			clientID: FACEBOOK_APP_ID,
+			clientSecret: FACEBOOK_APP_SECRET,
+			callbackURL: 'http://localhost:9000/auth/facebook/callback',
+		},
+		(accessToken, refreshToken, profile, done) => {
+			console.log(profile)
 
-		// 		return done(err, user);
-		// 	});
-		// }
+			findOrCreate(profile, function(err, user) {
+				return done(err, user);
+			});
+		}
 	)
 );
 
@@ -96,14 +96,17 @@ function testBucketCall() {
 }
 
 function getUser(token) {
-  return db('users')
-    .where({ 'users.token': token })
+	return db('users').where({ 'users.token': token });
 }
 
 function getExpenses(userId) {
-  return db('expense_item')
-    .where({'expense_item.user_id':userId})
-    .join('buckets_categories', 'expense_item.bucket_id', 'buckets_categories.id')
+	return db('expense_item')
+		.where({ 'expense_item.user_id': userId })
+		.join(
+			'buckets_categories',
+			'expense_item.bucket_id',
+			'buckets_categories.id'
+		);
 }
 
 // testUsersCall().then(response => {
@@ -133,6 +136,10 @@ APP.get('/get-expenses:id', (req, res) => {
 	});
 });
 
+//Authentication Routes//
+
+//Google Auth//
+
 APP.get(
 	'/auth/google',
 	passport.authenticate('google', {
@@ -144,10 +151,16 @@ APP.get(
 	'/auth/google/callback',
 	passport.authenticate('google', { failureRedirect: '/' }),
 	function(req, res) {
-		console.log('failure redirect')
 		res.redirect('/');
 	}
-)
+);
 
+//Facebook//
 
-APP.listen(PORT, () => console.log(`Expense App listening on port ${PORT}!`))
+APP.get('/auth/facebook', passport.authenticate('facebook'));
+
+APP.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { successRedirect: '/',
+                                      failureRedirect: '/auth' }));
+
+APP.listen(PORT, () => console.log(`Expense APP listening on port ${PORT}!`));

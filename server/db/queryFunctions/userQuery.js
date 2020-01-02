@@ -1,24 +1,34 @@
 const log = require('../logging.js');
-const dbConfigs = require('../knexfile');
-const db = require('knex')(dbConfigs.development);
+const {db} = require('../dbConnection')
 
-function getUsers(slug) {
-	const userTableQuery = `
-      SELECT *
-        FROM users
-    `;
-	return db.raw(userTableQuery);
-}
+function findOrCreate(profile, done){
 
-function createNewUser(profile){
-    db('users')
-        .insert({ 
-            first_name: profile.name.givenName,
-            last_name: profile.name.familyName,
-            googleId: profile.id
-        })
+db('users')
+.where({ googleId: profile.id })
+.then(res => {
+    const user = res[0];
+    if (!user) {
+        db('users')
+            .insert({
+                first_name: profile.name.givenName,
+                last_name: profile.name.familyName,
+                googleId: profile.id,
+            })
+            .catch(err => {
+                console.error('Error creating new user - ', err);
+            });
+        return done(null, user);
+    }
+    if (user) {
+        return done(null, user);
+    }
+})
+.catch(err => {
+    console.error('Local strategy error - ', err);
+    return err;
+});
 }
 
 module.exports = {
-	createNewUser: createNewUser,
+	findOrCreate: findOrCreate,
 };
