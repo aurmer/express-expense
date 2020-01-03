@@ -6,10 +6,9 @@ exports.seed = function(knex) {
 			// Inserts seed entries
 			return knex('users').insert([
 				{
-					first_name: 'John',
-					last_name: 'Doe',
-					email: 'John.Doe@Gmail.com',
-					token: 'test',
+					first_name: 'Chris',
+					last_name: 'Oakman',
+					email: 'chris@oakmac.com',
 				},
 			]);
 		});
