@@ -252,6 +252,10 @@ pointer-events: none;
   }
 } */
 /* DASHBOARD STYLING ~~~~~~~~~~~~~~~~~~~~~~~~ */
+#expenseTable h3 {
+  text-align: center;
+  margin-top: 40px;
+}
 h1 {
   height: 48px
 }
@@ -301,3 +305,11 @@ th:nth-child(3), th:nth-child(4) {
 .paid-header {
   background-color: var(--main-brand-color);
 }
+/* .accordion .card-header:after {
+  font-family: 'FontAwesome';  
+  content: "\f068";
+  float: right; 
+}
+.accordion .card-header.collapsed:after {
+  content: "\f067"; 
+} */
