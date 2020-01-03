@@ -25,7 +25,7 @@ passport.use(
 			callbackURL: 'http://localhost:9000/auth/google/callback',
 		},
 		(accessToken, refreshToken, profile, done) => {
-			console.log(profile.displayName);
+			// console.log(profile);
 			findOrCreate(profile, function(err, user) {
 				return done(err, user);
 			});
@@ -39,9 +39,20 @@ passport.use(
 			clientID: FACEBOOK_APP_ID,
 			clientSecret: FACEBOOK_APP_SECRET,
 			callbackURL: 'http://localhost:9000/auth/facebook/callback',
+			profileFields: [
+				'id',
+				'email',
+				'gender',
+				'link',
+				'locale',
+				'name',
+				'timezone',
+				'updated_time',
+				'verified',
+			],
 		},
 		(accessToken, refreshToken, profile, done) => {
-			console.log(profile)
+			// console.log(profile);
 
 			findOrCreate(profile, function(err, user) {
 				return done(err, user);
@@ -54,16 +65,17 @@ passport.use(
 
 APP.use(passport.initialize());
 APP.use(passport.session());
-
 APP.get('/success', (req, res) => res.send('you have successfully logged in'));
 APP.get('/error', (req, res) => res.send('error logging in'));
 
-passport.serializeUser((user, cb) => {
-	cb(null, user);
+passport.serializeUser((user, done) => {
+	console.log('serialize user - ', user)
+	done(null, user);
 });
 
-passport.deserializeUser((obj, cb) => {
-	cb(null, obj);
+passport.deserializeUser((id, done) => {
+	console.log(id)
+	done(null, id);
 });
 
 // Test DB Connections //
@@ -143,13 +155,16 @@ APP.get('/get-expenses:id', (req, res) => {
 APP.get(
 	'/auth/google',
 	passport.authenticate('google', {
-		scope: ['https://www.googleapis.com/auth/plus.login'],
+		scope: [
+			'https://www.googleapis.com/auth/plus.login',
+			'https://www.googleapis.com/auth/userinfo.email',
+		],
 	})
 );
 
 APP.get(
 	'/auth/google/callback',
-	passport.authenticate('google', { failureRedirect: '/' }),
+	passport.authenticate('google', { failureRedirect: '/auth' }),
 	function(req, res) {
 		res.redirect('/');
 	}
@@ -157,10 +172,22 @@ APP.get(
 
 //Facebook//
 
-APP.get('/auth/facebook', passport.authenticate('facebook'));
+APP.get(
+	'/auth/facebook',
+	passport.authenticate('facebook', {
+		scope: 'public_profile, email',
+	})
+);
 
-APP.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { successRedirect: '/',
-                                      failureRedirect: '/auth' }));
+APP.get(
+	'/auth/facebook/callback',
+	passport.authenticate('facebook', {
+		//   successRedirect: '/',
+		failureRedirect: '/auth',
+	}),
+	function(req, res) {
+		res.redirect('/');
+	}
+);
 
 APP.listen(PORT, () => console.log(`Expense APP listening on port ${PORT}!`));
