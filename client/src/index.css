@@ -21,7 +21,7 @@ code {
   font-weight: bold;
 }
 .container {
-  padding: 56px 5px 
+  padding: 56px 5px
 }
 /* LOGIN CARD STYLING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 .btn {
@@ -300,4 +300,40 @@ th:nth-child(3), th:nth-child(4) {
 }
 .paid-header {
   background-color: var(--main-brand-color);
+}
+
+.box__dragndrop,
+.box__uploading,
+.box__success,
+.box__error {
+  display: none;
+}
+
+.box.has-advanced-upload {
+  background-color: white;
+  outline: 2px dashed black;
+  outline-offset: -10px;
+}
+.box.has-advanced-upload .box__dragndrop {
+  display: inline;
+}
+
+.box__file {
+  border: 0;
+}
+
+.box.is-dragover {
+  background-color: grey;
+}
+
+.ahs-dropzone {
+  outline: 2px dashed #92b0b3;
+  outline-offset: -10px;
+  transition: outline-offset .15s ease-in-out,
+    background-color .15s linear;
+  padding: 10px;
+}
+
+.ahs-dropzone p {
+  margin: 10px 0;
 }

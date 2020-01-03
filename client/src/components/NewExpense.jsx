@@ -1,18 +1,31 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import ReceiptUpload from './ReceiptUpload'
 import Button from 'react-bootstrap/Button'
 import { receiptLoaded } from '../redux/actions'
 
+
 const NewExpenseForm = () => {
+
+  const receipt_image_box = (
+    <>
+      <div className="box__input">
+        <input className="box__file" type="file" name="receipt" id="file" accept="image/*" />
+        <label htmlFor="file"><strong>Choose a file</strong><span className="box__dragndrop"> or drag it here</span>.</label>
+        <button className="box__button" type="submit">Upload</button>
+      </div>
+      <div className="box__uploading">Uploading&hellip;</div>
+      <div className="box__success">Done!</div>
+      <div className="box__error">Error! <span></span>.</div>
+    </>
+  )
+
   return (
     <div>
       <form className="go-bottom">
         <div className="form-input-container">
           <div className="receipt-img-container">
-            <img className="receipt-img" src="" alt="receipt"></img>
-          </div>
-          <div className="file-input-container">
-            <input id="receiptImage" type="file" accept="image/*"/>
+            <ReceiptUpload />
           </div>
         </div>
         <div className="form-input-container">
