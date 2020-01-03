@@ -13,7 +13,8 @@ const ReceiptModal= () => {
 
   return (
     <span>
-      <img onClick={handleShow} className="receipt-icon" alt="receipt image" src={ReceiptImage}></img>
+      {/* <img onClick={handleShow} className="receipt-icon" alt="receipt image" src={ReceiptImage}></img> */}
+      <span onClick={handleShow}>Receipt</span>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <h2>
