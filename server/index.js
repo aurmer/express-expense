@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const session = require('express-session')
+const session = require('express-session');
 var cors = require('cors');
 const APP = express();
 APP.use(cors());
@@ -52,8 +52,6 @@ passport.use(
 			],
 		},
 		(accessToken, refreshToken, profile, done) => {
-			// console.log(profile);
-
 			findOrCreate(profile, function(err, user) {
 				return done(err, user);
 			});
@@ -65,12 +63,12 @@ passport.use(
 
 APP.use(
 	session({
-	  secret: "keyboard cat",
-	  resave: false,
-	  saveUninitialized: true,
-	  cookie: {}
+		secret: 'keyboard cat',
+		resave: false,
+		saveUninitialized: true,
+		cookie: {},
 	})
-  );
+);
 
 APP.use(passport.initialize());
 APP.use(passport.session());
@@ -87,15 +85,12 @@ passport.deserializeUser((user, done) => {
 
 function ensureAuth(req, res, next) {
 	if (req.isAuthenticated()) {
-		console.log("user is authenticated")
-	  next();
-	  // res.redirect("/home")
+		console.log('user is authenticated');
+		next();
 	} else {
-	  res.redirect("/login");
+		res.redirect('/login');
 	}
-  }
-  
-
+}
 
 // Test DB Connections //
 
@@ -209,16 +204,16 @@ APP.get(
 	}
 );
 
-APP.get("/logout", function(req, res) {
+APP.get('/logout', function(req, res) {
 	req.logout();
-	res.redirect("/login");
-  });
-  
-APP.get("/success", ensureAuth, (req, res) => {
-	console.log(req.query.givenName)
-	res.send("Welcome " + req.query.givenName + "!!")
+	res.redirect('/login');
 });
 
-APP.get("/error", (req, res) => res.send("error logging in"));
+APP.get('/success', ensureAuth, (req, res) => {
+	console.log(req.query.givenName);
+	res.send('Welcome ' + req.query.givenName + '!!');
+});
+
+APP.get('/error', (req, res) => res.send('error logging in'));
 
 APP.listen(PORT, () => console.log(`Expense APP listening on port ${PORT}!`));
