@@ -13,6 +13,22 @@ module.exports = {
     }
   },
 
+  aubrey_dev: {
+    client: 'pg',
+    connection: {
+      database: 'expense_database',
+      user:     'postgres',
+      password: 'postgres'
+    },
+    migrations: {
+      directory: __dirname + '/knex/migrations',
+    },
+    seeds: {
+      directory: __dirname + '/knex/seeds'
+    }
+  },
+
+
   // staging: {
   //   client: 'pg',
   //   connection: {

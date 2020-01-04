@@ -4,7 +4,13 @@ const session = require('express-session');
 var cors = require('cors');
 const APP = express();
 APP.use(cors());
+<<<<<<< HEAD
 const PORT = process.env.PORT;
+=======
+APP.use(express.json());
+APP.use(express.urlencoded({ extended: true }))
+const PORT = process.env.PORT || 3000;
+>>>>>>> master
 const { db } = require('./db/dbConnection');
 const passport = require('passport'),
 	FacebookStrategy = require('passport-facebook').Strategy,
@@ -96,37 +102,9 @@ function ensureAuth(req, res, next) {
 
 // Test DB Connections //
 
-function testUsersCall() {
-	const userTableQuery = `
-      SELECT *
-        FROM users
-    `;
-
-	return db.raw(userTableQuery);
+function getUser(providerId) {
+	return db('users').where({ 'users.providerId': providerId })
 }
-
-function testExpenseCall() {
-	const expenseTableQuery = `
-      SELECT *
-        FROM expense_item
-	`;
-
-	return db.raw(expenseTableQuery);
-}
-
-function testBucketCall() {
-	const bucketableQuery = `
-      SELECT *
-        FROM buckets_categories
-    `;
-
-	return db.raw(bucketableQuery);
-}
-
-function getUser(token) {
-	return db('users').where({ 'users.token': token });
-}
-
 function getExpenses(userId) {
 	return db('expense_item')
 		.where({ 'expense_item.user_id': userId })
@@ -136,18 +114,32 @@ function getExpenses(userId) {
 			'buckets_categories.id'
 		);
 }
+function getCategories(userId) {	
+	return db('buckets_categories')
+		.where({ 'buckets_categories.user_id': userId })
+}
+function postNewCategory(userId, category) {
+	return db('buckets_categories')
+		// .where({ 'buckets_categories.user_id': userId })
+		.insert([{
+			user_id: userId,
+			bucket_name: category.bucket_name
+		}])
+}
+function postNewExpense(userId, expense) {
+	return db('expense_item')
+		.where({ 'expense_item.user_id': userId })
+		.insert([{ 
+			receipt_name: expense.description,
+			amount: expense.amount,
+			expense_date: expense.date, 
+			status: 'Not submitted',
+			bucket_id: expense.bucket_id,
+			user_id: userId
+		}])
+}
 
-// testUsersCall().then(response => {
-// 	console.log(response.rows);
-// });
-
-// testExpenseCall().then(response => {
-// 	console.log(response.rows);
-// });
-
-// testBucketCall().then(response => {
-// 	console.log(response.rows);
-// });
+// SERVER API ROUTES
 
 APP.use(express.static('public'));
 
@@ -159,12 +151,45 @@ APP.get('/get-user', ensureAuth, (req, res, next) => {
 	});
 });
 
-APP.get('/get-expenses:id', (req, res) => {
-	console.log('incoming request for expenses for userId: ' + req.params.id);
-	getExpenses(req.params.id).then(expenses => {
-		res.send(expenses);
-	});
+APP.get('/get-expenses/:providerId', (req, res) => {
+	console.log('incoming request for expenses for providerId: ' + req.params.providerId);
+	getUser(req.params.providerId)
+		.then(user => {
+			getExpenses(user[0].id)
+				.then(expenses => {
+				res.send(expenses);
+			});
+		})
 });
+
+APP.get('/get-categories/:providerId', (req, res) => {
+	console.log('incoming request for categories for providerId: ' + req.params.providerId)
+	getUser(req.params.providerId)
+		.then(user => {
+			getCategories(user[0].id)
+				.then(categories => {
+					console.log(categories)
+					res.send(categories)
+				})
+		})
+})
+APP.post('/add-category/:providerId', (req, res) => {
+	console.log(req.body)
+	getUser(req.params.providerId)
+	.then(user => {
+		postNewCategory(user[0].id, req.body)
+			.then(res.redirect('back'))
+	})
+})
+
+APP.post('/add-expense/:providerId', (req, res) => {
+	console.log(req.body)
+	getUser(req.params.providerId)
+		.then(user => {
+			postNewExpense(user[0].id, req.body)
+				.then(res.redirect('back'))
+		})
+})
 
 //Authentication Routes//
 
