@@ -4,13 +4,9 @@ const session = require('express-session');
 var cors = require('cors');
 const APP = express();
 APP.use(cors());
-<<<<<<< HEAD
-const PORT = process.env.PORT;
-=======
 APP.use(express.json());
 APP.use(express.urlencoded({ extended: true }))
 const PORT = process.env.PORT || 3000;
->>>>>>> master
 const { db } = require('./db/dbConnection');
 const passport = require('passport'),
 	FacebookStrategy = require('passport-facebook').Strategy,
