@@ -196,9 +196,6 @@ form.go-bottom input:focus + label, form.go-bottom textarea:focus + label {
   top: 100%;
   margin-top: -16px;
 }
-form.go-bottom input:valid:not(type:"file"), form.go-bottom textarea:valid {
-  padding: 4px 6px 20px 6px;
-}
 form.go-bottom input:valid + label, form.go-bottom textarea:valid + label {
   top: 100%;
   margin-top: -16px;
@@ -352,10 +349,10 @@ th:nth-child(3), th:nth-child(4) {
 }
 
 /* .accordion .card-header:after {
-  font-family: 'FontAwesome';  
+  font-family: 'FontAwesome';
   content: "\f068";
-  float: right; 
+  float: right;
 }
 .accordion .card-header.collapsed:after {
-  content: "\f067"; 
+  content: "\f067";
 } */

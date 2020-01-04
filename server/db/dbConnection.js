@@ -1,6 +1,6 @@
 const log = require("./logging");
 const dbConfigs = require("./knexfile");
-const db = require("knex")(dbConfigs.development);
+const db = require("knex")(dbConfigs[process.env.NODE_ENV]);
 
 db.raw("SELECT 1")
 .then((result) => {
