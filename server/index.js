@@ -126,9 +126,9 @@ function postNewExpense(userId, expense) {
 	return db('expense_item')
 		.where({ 'expense_item.user_id': userId })
 		.insert([{ 
-			receipt_name: expense.description,
+			receipt_name: expense.receipt_name,
 			amount: expense.amount,
-			expense_date: expense.date, 
+			expense_date: expense.expense_date, 
 			status: 'Not submitted',
 			bucket_id: expense.bucket_id,
 			user_id: userId
@@ -141,8 +141,12 @@ APP.use(express.static('public'));
 
 APP.get('/', (req, res) => res.send('Hello World! - /auth/google'));
 
-APP.get('/get-user', ensureAuth, (req, res, next) => {
-	testUsersCall().then(response => {
+// APP.get('/get-user', ensureAuth, (req, res, next) => {
+// 	testUsersCall().then(response => {
+// 		res.send(response);
+// 	});
+APP.get('/get-user/:providerId', (req, res, next) => {
+	getUser(req.params.providerId).then(response => {
 		res.send(response);
 	});
 });
@@ -164,26 +168,30 @@ APP.get('/get-categories/:providerId', (req, res) => {
 		.then(user => {
 			getCategories(user[0].id)
 				.then(categories => {
-					console.log(categories)
 					res.send(categories)
 				})
 		})
 })
 APP.post('/add-category/:providerId', (req, res) => {
-	console.log(req.body)
+	console.log('new category for providerId: ' + req.params.providerId)
 	getUser(req.params.providerId)
 	.then(user => {
+		let userId = user[0].id
 		postNewCategory(user[0].id, req.body)
-			.then(res.redirect('back'))
+			.then(getCategories(userId))
+			.then(categories => {
+				res.send(categories)
+			})
 	})
 })
 
 APP.post('/add-expense/:providerId', (req, res) => {
+	console.log('new expense for providerId: ' + req.params.providerId)
 	console.log(req.body)
 	getUser(req.params.providerId)
 		.then(user => {
 			postNewExpense(user[0].id, req.body)
-				.then(res.redirect('back'))
+				.then(res.send(console.log('success')))
 		})
 })
 

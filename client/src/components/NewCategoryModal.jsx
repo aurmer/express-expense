@@ -1,22 +1,36 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 
 const NewCategoryModal = () => {
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = useState(false);
+  const [bucketName, setBucketName] = useState('')
 
   const handleClose = () => {
     setShow(false);
   }
-  const handleSave = (e) => {
-    addNewCategory();
+  const handleChange = e => {
+    setBucketName(e.target.value)
+  }
+  async function postNewCategory(url = '', data = {}) {
+    const response = await fetch(url, {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'omit',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    return response.json();
+  }
+  const handleSave = e => {
+    e.preventDefault()
+    postNewCategory((process.env.REACT_APP_API_SERVER + "/add-category/" + process.env.REACT_APP_TEST_USER_PROVIDERID), {bucket_name: bucketName})
     setShow(false);
   }
   const handleShow = () => setShow(true);
 
-  const addNewCategory = () => {
-    console.log('add new clicked')
-  }
   return (
     <>
       <Button 
@@ -32,9 +46,9 @@ const NewCategoryModal = () => {
           <Modal.Title>Add New Category</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form id="add-category" action={process.env.REACT_APP_API_SERVER + "/add-category/" + process.env.REACT_APP_TEST_USER_PROVIDERID} method="post" className="go-bottom">
+          <form id="add-category" className="go-bottom">
             <div className="form-input-container">
-              <input id="category" name="bucket_name" type="text" required/>
+              <input onChange={handleChange} id="category" name="bucket_name" type="text" required/>
               <label for="description">New Category</label>
             </div>
           </form>
