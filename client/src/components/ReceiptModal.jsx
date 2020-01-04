@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Button from 'react-bootstrap/Button'
+// import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 
 import ReceiptImage from '../img/receipt.svg'
@@ -21,10 +21,10 @@ const ReceiptModal= () => {
             Receipt
           </h2>
         </Modal.Header>
-        <Modal.Body 
+        <Modal.Body
           className="receipt-image-container"
         >
-          <img className="receipt-image" alt="receipt image" src="https://cdn2.thecatapi.com/images/dub.jpg"></img>
+          <img className="receipt-image" alt="receipt" src="https://cdn2.thecatapi.com/images/dub.jpg"></img>
         </Modal.Body>
       </Modal>
     </span>
