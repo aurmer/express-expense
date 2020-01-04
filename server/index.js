@@ -1,11 +1,16 @@
 require('dotenv').config();
 const express = require('express');
+const session = require('express-session');
 var cors = require('cors');
 const APP = express();
 APP.use(cors());
+<<<<<<< HEAD
+const PORT = process.env.PORT;
+=======
 APP.use(express.json());
 APP.use(express.urlencoded({ extended: true }))
 const PORT = process.env.PORT || 3000;
+>>>>>>> master
 const { db } = require('./db/dbConnection');
 const passport = require('passport'),
 	FacebookStrategy = require('passport-facebook').Strategy,
@@ -17,6 +22,8 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
 const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
 
+const SESSION_SECRET = process.env.SESSION_SECRET;
+
 const { findOrCreate } = require('./db/queryFunctions/userQuery');
 
 passport.use(
@@ -27,7 +34,6 @@ passport.use(
 			callbackURL: 'http://localhost:9000/auth/google/callback',
 		},
 		(accessToken, refreshToken, profile, done) => {
-			// console.log(profile);
 			findOrCreate(profile, function(err, user) {
 				return done(err, user);
 			});
@@ -54,8 +60,6 @@ passport.use(
 			],
 		},
 		(accessToken, refreshToken, profile, done) => {
-			// console.log(profile);
-
 			findOrCreate(profile, function(err, user) {
 				return done(err, user);
 			});
@@ -65,22 +69,38 @@ passport.use(
 
 // Authentication //
 
+APP.use(
+	session({
+		secret: SESSION_SECRET,
+		resave: false,
+		saveUninitialized: true,
+		cookie: {},
+	})
+);
+
 APP.use(passport.initialize());
 APP.use(passport.session());
 APP.get('/success', (req, res) => res.send('you have successfully logged in'));
 APP.get('/error', (req, res) => res.send('error logging in'));
 
 passport.serializeUser((user, done) => {
-	console.log('serialize user - ', user)
+	done(null, user.id);
+});
+
+passport.deserializeUser((user, done) => {
 	done(null, user);
 });
 
-passport.deserializeUser((id, done) => {
-	console.log(id)
-	done(null, id);
-});
+function ensureAuth(req, res, next) {
+	if (req.isAuthenticated()) {
+		console.log(req.user + 'is authenticated');
+		next();
+	} else {
+		res.redirect('/login');
+	}
+}
 
-// SERVER API FUNCTIONS
+// Test DB Connections //
 
 function getUser(providerId) {
 	return db('users').where({ 'users.providerId': providerId })
@@ -121,10 +141,12 @@ function postNewExpense(userId, expense) {
 
 // SERVER API ROUTES
 
+APP.use(express.static('public'));
+
 APP.get('/', (req, res) => res.send('Hello World! - /auth/google'));
 
-APP.get('/get-user/:providerId', (req, res, next) => {
-	getUser(req.params.providerId).then(response => {
+APP.get('/get-user', ensureAuth, (req, res, next) => {
+	testUsersCall().then(response => {
 		res.send(response);
 	});
 });
@@ -210,5 +232,17 @@ APP.get(
 		res.redirect('/');
 	}
 );
+
+APP.get('/logout', function(req, res) {
+	req.logout();
+	res.redirect('/login');
+});
+
+APP.get('/success', ensureAuth, (req, res) => {
+	console.log(req.query.givenName);
+	res.send('Welcome ' + req.query.givenName + '!!');
+});
+
+APP.get('/error', (req, res) => res.send('error logging in'));
 
 APP.listen(PORT, () => console.log(`Expense APP listening on port ${PORT}!`));

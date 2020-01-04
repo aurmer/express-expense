@@ -1,0 +1,85 @@
+body{
+  background-color: rgba(228, 252, 229, 0.250);
+}
+
+/* Nav Bar CSS */
+
+nav{
+  height: auto;
+}
+
+#login-nav {
+  content: url(./images/logoLong.png);
+}
+
+/* Login Button CSS */
+
+.btn {
+    font-weight: bold;
+    color: #fff;
+    background-color: var(--main-brand-color)
+  }
+  .btn:hover, .btn:focus, .btn.focus, .btn:active, .btn.active {
+    font-weight: bold;
+    color: #fff;
+    background-color: var(--main-brand-color-hover);
+    border-color: var(--main-brand-color)
+  }
+  .btn-primary:not(:disabled):not(.disabled).active,
+  .btn-primary:not(:disabled):not(.disabled):active {
+    color:#fff;
+    background-color: var(--main-brand-color);
+    border-color: var(--main-brand-color)
+  }
+  .btn-facebook {
+    background-color: rgb(59,89,152);
+    border-color: rgb(59,89,152)
+  }
+  .btn-facebook:hover {
+    background-color: rgb(59,89,152,.85);
+    border-color: rgb(59,89,152)
+  }
+  .btn-google {
+    background-color: rgb(66,133,244);
+    border-color: rgb(66,133,244)
+  }
+  .btn-google:hover {
+    background-color: rgb(66,133,244,.85);
+    border-color: rgb(66,133,244)
+  }
+  .btn-github {
+    background-color: rgb(23,21,21);
+    border-color: rgb(23,21,21)
+  }
+  .btn-github:hover {
+    background-color: rgb(23,21,21,.85);
+    border-color: rgb(23,21,21)
+  }
+  .card-header {
+    background-color: #336726;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+  }
+  .login-card-element {
+    position: absolute;
+    width: 350;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+
+  @media screen and (max-width: 960px) {
+    #login-nav {
+      content: url(./images/logoStacked.png);
+    }
+
+    .login-card-element {
+      position: absolute;
+      width: 300;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+
+  }
