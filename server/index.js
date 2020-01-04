@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const session = require('express-session')
 var cors = require('cors');
 const APP = express();
 APP.use(cors());
@@ -25,7 +26,6 @@ passport.use(
 			callbackURL: 'http://localhost:9000/auth/google/callback',
 		},
 		(accessToken, refreshToken, profile, done) => {
-			// console.log(profile);
 			findOrCreate(profile, function(err, user) {
 				return done(err, user);
 			});
@@ -63,20 +63,39 @@ passport.use(
 
 // Authentication //
 
+APP.use(
+	session({
+	  secret: "keyboard cat",
+	  resave: false,
+	  saveUninitialized: true,
+	  cookie: {}
+	})
+  );
+
 APP.use(passport.initialize());
 APP.use(passport.session());
 APP.get('/success', (req, res) => res.send('you have successfully logged in'));
 APP.get('/error', (req, res) => res.send('error logging in'));
 
 passport.serializeUser((user, done) => {
-	console.log('serialize user - ', user)
+	done(null, user.id);
+});
+
+passport.deserializeUser((user, done) => {
 	done(null, user);
 });
 
-passport.deserializeUser((id, done) => {
-	console.log(id)
-	done(null, id);
-});
+function ensureAuth(req, res, next) {
+	if (req.isAuthenticated()) {
+		console.log("user is authenticated")
+	  next();
+	  // res.redirect("/home")
+	} else {
+	  res.redirect("/login");
+	}
+  }
+  
+
 
 // Test DB Connections //
 
@@ -135,7 +154,7 @@ function getExpenses(userId) {
 
 APP.get('/', (req, res) => res.send('Hello World! - /auth/google'));
 
-APP.get('/get-user', (req, res, next) => {
+APP.get('/get-user', ensureAuth, (req, res, next) => {
 	testUsersCall().then(response => {
 		res.send(response);
 	});
@@ -189,5 +208,17 @@ APP.get(
 		res.redirect('/');
 	}
 );
+
+APP.get("/logout", function(req, res) {
+	req.logout();
+	res.redirect("/login");
+  });
+  
+APP.get("/success", ensureAuth, (req, res) => {
+	console.log(req.query.givenName)
+	res.send("Welcome " + req.query.givenName + "!!")
+});
+
+APP.get("/error", (req, res) => res.send("error logging in"));
 
 APP.listen(PORT, () => console.log(`Expense APP listening on port ${PORT}!`));
