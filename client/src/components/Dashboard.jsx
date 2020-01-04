@@ -10,7 +10,7 @@ class Dashboard extends React.Component {
     }
   }
   fetchUserName() {
-    fetch(process.env.REACT_APP_API_SERVER + "/get-user/" + process.env.REACT_APP_TEST_USER_TOKEN)
+    fetch(process.env.REACT_APP_API_SERVER + "/get-user/" + process.env.REACT_APP_TEST_USER_PROVIDERID)
       .then(response => response.json())
       .then(data => {
         this.setState({ greeting: "Hello, " + data[0].first_name + "!" })
@@ -23,7 +23,6 @@ class Dashboard extends React.Component {
     return (
       <div>
         <h1>{this.state.greeting}</h1>
-        
         <ExpenseTable/>
       </div>
     )

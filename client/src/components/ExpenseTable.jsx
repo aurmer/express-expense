@@ -2,8 +2,8 @@ import React from 'react'
 // import { connect } from 'react-redux'
 
 import Table from 'react-bootstrap/Table'
-import Accordion from 'react-bootstrap/Accordion'
-import Card from 'react-bootstrap/Card'
+// import Accordion from 'react-bootstrap/Accordion'
+// import Card from 'react-bootstrap/Card'
 import Dropdown from 'react-bootstrap/Dropdown'
 
 import ReceiptModal from './ReceiptModal'
@@ -17,9 +17,10 @@ class ExpenseTable extends React.Component {
     };
   }
   fetchExpenses() {
-    fetch(process.env.REACT_APP_API_SERVER + "/get-expenses/" + process.env.REACT_APP_TEST_USER_ID)
+    fetch(process.env.REACT_APP_API_SERVER + "/get-expenses/" + process.env.REACT_APP_TEST_USER_PROVIDERID)
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         this.setState({ expenses: data})
       })
   }
@@ -48,6 +49,7 @@ class ExpenseTable extends React.Component {
             <Dropdown>
               <Dropdown.Toggle
                 size="sm"
+                variant="secondary"
               >
                 <Dropdown.Menu>
                   <Dropdown.Item>
@@ -77,7 +79,7 @@ class ExpenseTable extends React.Component {
           hover
           size="sm"
         >
-          <thead className="not-submitted-header">
+          <thead>
             <tr>
               <th>Category</th>
               <th>Description</th>
@@ -93,7 +95,7 @@ class ExpenseTable extends React.Component {
           hover
           size="sm"
         >
-          <thead className="pending-header">
+          <thead>
             <tr>
               <th>Category</th>
               <th>Description</th>
@@ -109,7 +111,7 @@ class ExpenseTable extends React.Component {
           hover
           size="sm"
         >
-          <thead className="paid-header">
+          <thead>
             <tr>
               <th>Category</th>
               <th>Description</th>
