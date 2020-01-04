@@ -4,7 +4,7 @@ const session = require('express-session');
 var cors = require('cors');
 const APP = express();
 APP.use(cors());
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 const { db } = require('./db/dbConnection');
 const passport = require('passport'),
 	FacebookStrategy = require('passport-facebook').Strategy,
@@ -15,6 +15,8 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
 const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
 const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
+
+const SESSION_SECRET = process.env.SESSION_SECRET;
 
 const { findOrCreate } = require('./db/queryFunctions/userQuery');
 
@@ -63,7 +65,7 @@ passport.use(
 
 APP.use(
 	session({
-		secret: 'keyboard cat',
+		secret: SESSION_SECRET,
 		resave: false,
 		saveUninitialized: true,
 		cookie: {},
@@ -85,7 +87,7 @@ passport.deserializeUser((user, done) => {
 
 function ensureAuth(req, res, next) {
 	if (req.isAuthenticated()) {
-		console.log('user is authenticated');
+		console.log(req.user + 'is authenticated');
 		next();
 	} else {
 		res.redirect('/login');
@@ -146,6 +148,8 @@ function getExpenses(userId) {
 // testBucketCall().then(response => {
 // 	console.log(response.rows);
 // });
+
+APP.use(express.static('public'));
 
 APP.get('/', (req, res) => res.send('Hello World! - /auth/google'));
 

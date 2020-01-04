@@ -19,6 +19,7 @@ class Dashboard extends React.Component {
   componentDidMount() {
     this.fetchUserName()
   }
+  
   render() {
     return (
       <div>
