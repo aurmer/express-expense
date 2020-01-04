@@ -24,12 +24,12 @@ code {
   padding: 56px 5px
 }
 /* LOGIN CARD STYLING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-.btn {
+.btn-primary {
   font-weight: bold;
   color: #fff;
   background-color: var(--main-brand-color)
 }
-.btn:hover, .btn:focus, .btn.focus, .btn:active, .btn.active {
+.btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active, .btn-primary.active {
   font-weight: bold;
   color: #fff;
   background-color: var(--main-brand-color-hover);
@@ -211,8 +211,18 @@ form select {
 select::-ms-expand {
   display: none;
 }
+.category-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.add-category-btn-container {
+  display: flex;
+  width: 24%
+}
 .form-select-container {
-  position: relative
+  position: relative;
+  width: 74%
 }
 .form-select-container:after {
 content: '>';
@@ -237,24 +247,15 @@ pointer-events: none;
 .form-save-btn {
   margin-top: 20px;
 }
-/* HIDE SPECIFIC DASHBOARD COLUMN ON MOBILE */
-/* @media only screen and (max-width: 576px) {
-  td:nth-child(4), th:nth-child(4) {
-    display:none;
-  }
-}
-@media only screen and (min-width: 576px) {
-  td:nth-child(6), th:nth-child(6) {
-    display:none;
-  }
-} */
+
 /* DASHBOARD STYLING ~~~~~~~~~~~~~~~~~~~~~~~~ */
 #expenseTable h3 {
   text-align: center;
   margin-top: 40px;
 }
 h1 {
-  height: 48px
+  height: 48px;
+  margin-top: 1rem;
 }
 thead {
   color: #ffffff
@@ -293,13 +294,7 @@ th:nth-child(3), th:nth-child(4) {
   max-width: 95%;
   margin: 0 auto;
 }
-.not-submitted-header {
-  background-color: var(--not-submitted);
-}
-.pending-header {
-  background-color: var(--pending);
-}
-.paid-header {
+#expenseTable thead {
   background-color: var(--main-brand-color);
 }
 
