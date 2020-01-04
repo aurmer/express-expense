@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Button from 'react-bootstrap/Button'
+import AspectRatioBox from './AspectRatioBox'
 import { useDropzone } from 'react-dropzone'
 import { receiptLoaded } from '../redux/actions'
 
@@ -11,7 +12,7 @@ const ALLOWED_FILE_TYPES = [
 
 const KiB = 1024
 const MiB = KiB*1024
-const MAX_FILE_SIZE = 3*MiB
+const MAX_FILE_SIZE = 20*MiB
 
 
 function isDragAndDrop() {
@@ -50,7 +51,7 @@ function onDrop(e) {
     const myImg = document.getElementById('receiptImg')
     myImg.src = URL.createObjectURL(e[0])
     myImg.style.display = "block"
-    document.querySelector('.ahs-dropzone').style.display = "none"
+    document.getElementById('ahs-ar-box').style.display = "none"
   }
 }
 
@@ -62,7 +63,7 @@ function onDropRejected(e) {
       alert('your file must be a supported image')
     }
     else if(rejectedFile.size > MAX_FILE_SIZE) {
-      alert('your file must be a supported image')
+      alert('your file is too large. 3MiB limit.')
     }
   }
 }
@@ -87,19 +88,21 @@ const ReceiptUpload = () => {
 
   return (
     <>
-      <img id="receiptImg" style={{display:"none", width: "100%"}}/>
-      <div className="ahs-dropzone col-md-10" {...getRootProps()}>
-        <input className="dropzone-input" {...getInputProps()} />
-        <div className="text-center">
-          {isDragActive ? (
-            <p className="dropzone-content">Release to drop the files here</p>
-          ) : (
-            <p className="dropzone-content">
-              Drag 'n' drop some files here, or click to select files
-            </p>
-          )}
+      <img id="receiptImg" style={{display:"none"}}/>
+      <AspectRatioBox id="ahs-ar-box" width="200px" heightPercent="120%">
+        <div className="ahs-dropzone" {...getRootProps()}>
+          <input className="dropzone-input" {...getInputProps()} />
+          <div className="text-center">
+            {isDragActive ? (
+              <p className="dropzone-content">Release to drop the files here</p>
+            ) : (
+              <p className="dropzone-content">
+                Drag 'n' drop some files here, or click to select files
+              </p>
+            )}
+          </div>
         </div>
-      </div>
+      </AspectRatioBox>
     </>
   )
 }

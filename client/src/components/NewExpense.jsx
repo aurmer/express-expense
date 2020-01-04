@@ -24,9 +24,7 @@ const NewExpenseForm = () => {
     <div>
       <form className="go-bottom">
         <div className="form-input-container">
-          <div className="receipt-img-container">
-            <ReceiptUpload />
-          </div>
+          <ReceiptUpload />
         </div>
         <div className="form-input-container">
           <input id="description" name="description" type="text" required/>
