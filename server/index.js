@@ -99,6 +99,7 @@ function ensureAuth(req, res, next) {
 function getUser(providerId) {
 	return db('users').where({ 'users.providerId': providerId })
 }
+
 function getExpenses(userId) {
 	return db('expense_item')
 		.where({ 'expense_item.user_id': userId })
@@ -142,8 +143,6 @@ APP.get('*', (req, res, next)=>{
 
 APP.use('/login',express.static('public/login'));
 APP.use('/app/', ensureAuth, express.static('public/app'));
-
-APP.get('/', ensureAuth, (req, res) => res.send('Hello World! Welcome '));
 
 // APP.get('/get-user', ensureAuth, (req, res, next) => {
 // 	testUsersCall().then(response => {
