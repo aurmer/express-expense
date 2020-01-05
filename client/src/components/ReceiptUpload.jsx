@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import Button from 'react-bootstrap/Button'
 import AspectRatioBox from './AspectRatioBox'
 import { useDropzone } from 'react-dropzone'
 import { receiptLoaded } from '../redux/actions'
@@ -88,7 +87,7 @@ const ReceiptUpload = () => {
 
   return (
     <>
-      <img id="receiptImg" style={{display:"none"}}/>
+      <img alt="receipt" id="receiptImg" style={{display:"none"}}/>
       <AspectRatioBox id="ahs-ar-box" width="200px" heightPercent="120%">
         <div className="ahs-dropzone" {...getRootProps()}>
           <input className="dropzone-input" {...getInputProps()} />

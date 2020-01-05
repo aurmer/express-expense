@@ -215,6 +215,7 @@ select::-ms-expand {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 50px
 }
 .add-category-btn-container {
   display: flex;
@@ -251,7 +252,7 @@ pointer-events: none;
 /* DASHBOARD STYLING ~~~~~~~~~~~~~~~~~~~~~~~~ */
 #expenseTable h3 {
   text-align: center;
-  margin-top: 40px;
+  margin-top: 2rem;
 }
 h1 {
   height: 48px;
