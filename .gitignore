@@ -24,7 +24,7 @@ client/npm-debug.log*
 client/yarn-debug.log*
 client/yarn-error.log*
 
-
+server/public/app
 server/node_modules
 server/googleCredentials.js
 
