@@ -76,8 +76,6 @@ APP.use(
 
 APP.use(passport.initialize());
 APP.use(passport.session());
-APP.get('/success', (req, res) => res.send('you have successfully logged in'));
-APP.get('/error', (req, res) => res.send('error logging in'));
 
 passport.serializeUser((user, done) => {
 	done(null, user.id);
@@ -88,8 +86,8 @@ passport.deserializeUser((user, done) => {
 });
 
 function ensureAuth(req, res, next) {
+	console.log(req.isAuthenticated())
 	if (req.isAuthenticated()) {
-		console.log(req.user + 'is authenticated');
 		next();
 	} else {
 		res.redirect('/login');
@@ -101,6 +99,7 @@ function ensureAuth(req, res, next) {
 function getUser(providerId) {
 	return db('users').where({ 'users.providerId': providerId })
 }
+
 function getExpenses(userId) {
 	return db('expense_item')
 		.where({ 'expense_item.user_id': userId })
@@ -137,9 +136,13 @@ function postNewExpense(userId, expense) {
 
 // SERVER API ROUTES
 
-APP.use(express.static('public'));
+APP.get('*', (req, res, next)=>{
+	console.log(req.originalUrl)
+	next()
+})
 
-APP.get('/', (req, res) => res.send('Hello World! - /auth/google'));
+APP.use('/login',express.static('public/login'));
+APP.use('/app/', ensureAuth, express.static('public/app'));
 
 // APP.get('/get-user', ensureAuth, (req, res, next) => {
 // 	testUsersCall().then(response => {
@@ -211,13 +214,13 @@ APP.get(
 
 APP.get(
 	'/auth/google/callback',
-	passport.authenticate('google', { failureRedirect: '/auth' }),
+	passport.authenticate('google', { failureRedirect: '/' }),
 	function(req, res) {
-		res.redirect('/');
+		res.redirect('/app');
 	}
 );
 
-//Facebook//
+//Facebook Auth//
 
 APP.get(
 	'/auth/facebook',
@@ -230,22 +233,24 @@ APP.get(
 	'/auth/facebook/callback',
 	passport.authenticate('facebook', {
 		//   successRedirect: '/',
-		failureRedirect: '/auth',
+		failureRedirect: '/app',
 	}),
 	function(req, res) {
-		res.redirect('/');
+		res.redirect('/app');
 	}
 );
 
-APP.get('/logout', function(req, res) {
-	req.logout();
-	res.redirect('/login');
-});
+APP.get('/logout', function (req, res){
+	console.log(req.session)
+	req.session.destroy(function (err) {
+	  res.redirect('/login');
+	});
+  });
 
-APP.get('/success', ensureAuth, (req, res) => {
-	console.log(req.query.givenName);
-	res.send('Welcome ' + req.query.givenName + '!!');
-});
+// APP.get('/success', ensureAuth, (req, res) => {
+// 	console.log(req.query.givenName);
+// 	res.send('Welcome '+ req.user + '!!');
+// });
 
 APP.get('/error', (req, res) => res.send('error logging in'));
 
