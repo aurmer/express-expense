@@ -20,6 +20,22 @@ code {
   color: var(--main-brand-color);
   font-weight: bold;
 }
+.nav-link {
+	display: flex;
+	padding: .5rem 1rem;
+	justify-content: end;
+}
+#stacked-logo {
+  display: none !important
+}
+@media (max-width:767px) {
+  #stacked-logo {
+    display: inline-block !important
+  }
+  #long-logo {
+    display: none !important
+  }
+}
 .container {
   padding: 56px 5px
 }
@@ -277,7 +293,7 @@ th:nth-child(3), th:nth-child(4) {
 .table td, .table th {
   vertical-align: middle;
 }
-@media (max-width: 576px) {
+@media (max-width: 575px) {
   body {
     font-size: .8rem;
   }
