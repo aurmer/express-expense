@@ -12,6 +12,10 @@ nav{
   content: url(./images/logoLong.png);
 }
 
+h3 {
+  margin: 0 auto
+}
+
 /* Login Button CSS */
 
 .btn {
