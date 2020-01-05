@@ -10,7 +10,10 @@ const AppNavbar = () => {
 
   return (
     <Navbar expanded={expanded} expand="sm" bg="light" variant="light" fixed="top">
-      <Navbar.Brand href="/"><img alt="logo" height="30" className="d-inline-block align-top" src={require('../img/logoLong.png')}></img></Navbar.Brand>
+      <Navbar.Brand href="/">
+        <img id="stacked-logo" alt="logo" height="30" className="d-inline-block align-top" src={require('../img/logoStacked.png')}></img>
+        <img id="long-logo" alt="logo" height="30" className="d-inline-block align-top" src={require('../img/logoLong.png')}></img>
+      </Navbar.Brand>
       <Navbar.Toggle onClick={() => setExpanded(expanded ? false : "expanded")} aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
         <Nav>
