@@ -1,9 +1,6 @@
 import React from 'react'
 
-// import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-
-import ReceiptImage from '../img/receipt.svg'
 
 const ReceiptModal= () => {
   const [show, setShow] = React.useState(false);

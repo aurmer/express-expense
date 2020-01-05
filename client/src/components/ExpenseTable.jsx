@@ -20,7 +20,6 @@ class ExpenseTable extends React.Component {
     fetch(process.env.REACT_APP_API_SERVER + "/get-expenses/" + process.env.REACT_APP_TEST_USER_PROVIDERID)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
         this.setState({ expenses: data})
       })
   }
