@@ -16,7 +16,7 @@ const NewCategoryModal = () => {
     const response = await fetch(url, {
       method: 'POST',
       mode: 'cors',
-      credentials: 'omit',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -26,7 +26,7 @@ const NewCategoryModal = () => {
   }
   const handleSave = e => {
     e.preventDefault()
-    postNewCategory((process.env.REACT_APP_API_SERVER + "/add-category/" + process.env.REACT_APP_TEST_USER_PROVIDERID), {bucket_name: bucketName})
+    postNewCategory((process.env.REACT_APP_API_SERVER + "/add-category"), {bucket_name: bucketName})
     setShow(false);
   }
   const handleShow = () => setShow(true);

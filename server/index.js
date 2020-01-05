@@ -86,8 +86,9 @@ passport.deserializeUser((user, done) => {
 });
 
 function ensureAuth(req, res, next) {
-	console.log(req.isAuthenticated())
+	console.log('user login status:', req.isAuthenticated())
 	if (req.isAuthenticated()) {
+		console.log('user id: ', req.user)
 		next();
 	} else {
 		res.redirect('/login');
@@ -96,10 +97,9 @@ function ensureAuth(req, res, next) {
 
 // Test DB Connections //
 
-function getUser(providerId) {
-	return db('users').where({ 'users.providerId': providerId })
+function getUser(userId) {
+	return db('users').where({ 'users.id': userId })
 }
-
 function getExpenses(userId) {
 	return db('expense_item')
 		.where({ 'expense_item.user_id': userId })
@@ -144,58 +144,40 @@ APP.get('*', (req, res, next)=>{
 APP.use('/login',express.static('public/login'));
 APP.use('/app/', ensureAuth, express.static('public/app'));
 
-// APP.get('/get-user', ensureAuth, (req, res, next) => {
-// 	testUsersCall().then(response => {
-// 		res.send(response);
-// 	});
-APP.get('/get-user/:providerId', (req, res, next) => {
-	getUser(req.params.providerId).then(response => {
+// DATABASE API ROUTES
+
+APP.get('/get-user', ensureAuth, (req, res, next) => {
+	getUser(req.user)
+		.then(response => {
 		res.send(response);
 	});
 });
-
-APP.get('/get-expenses/:providerId', (req, res) => {
-	console.log('incoming request for expenses for providerId: ' + req.params.providerId);
-	getUser(req.params.providerId)
-		.then(user => {
-			getExpenses(user[0].id)
-				.then(expenses => {
-				res.send(expenses);
-			});
-		})
-});
-
-APP.get('/get-categories/:providerId', (req, res) => {
-	console.log('incoming request for categories for providerId: ' + req.params.providerId)
-	getUser(req.params.providerId)
-		.then(user => {
-			getCategories(user[0].id)
-				.then(categories => {
-					res.send(categories)
-				})
+APP.get('/get-expenses', ensureAuth, (req, res) => {
+	console.log('incoming request for expenses for user: ' + req.user);
+	getExpenses(req.user)
+		.then(expenses => {
+		res.send(expenses);
+	});
+})
+APP.get('/get-categories', ensureAuth, (req, res) => {
+	console.log('incoming request for categories for user: ', req.user)
+	getCategories(req.user)
+		.then(categories => {
+			res.send(categories)
 		})
 })
-APP.post('/add-category/:providerId', (req, res) => {
-	console.log('new category for providerId: ' + req.params.providerId)
-	getUser(req.params.providerId)
-	.then(user => {
-		let userId = user[0].id
-		postNewCategory(user[0].id, req.body)
-			.then(getCategories(userId))
-			.then(categories => {
-				res.send(categories)
-			})
-	})
-})
-
-APP.post('/add-expense/:providerId', (req, res) => {
-	console.log('new expense for providerId: ' + req.params.providerId)
-	console.log(req.body)
-	getUser(req.params.providerId)
-		.then(user => {
-			postNewExpense(user[0].id, req.body)
-				.then(res.send(console.log('success')))
+APP.post('/add-category', ensureAuth, (req, res) => {
+	console.log('new category for user: ' + req.user)
+	postNewCategory(req.user, req.body)
+		.then(getCategories(req.user))
+		.then(categories => {
+			res.send(categories)
 		})
+})
+APP.post('/add-expense/', ensureAuth, (req, res) => {
+	console.log('new expense for user: ', req.user)
+	postNewExpense(req.user, req.body)
+		.then(res.send(console.log('success')))
 })
 
 //Authentication Routes//
