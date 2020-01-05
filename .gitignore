@@ -23,8 +23,9 @@ client/build
 client/npm-debug.log*
 client/yarn-debug.log*
 client/yarn-error.log*
+client/build
 
-
+server/public/app
 server/node_modules
 server/googleCredentials.js
 
