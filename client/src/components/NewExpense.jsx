@@ -30,7 +30,7 @@ class NewExpenseForm extends React.Component {
     const response = await fetch(url, {
       method: 'POST',
       mode: 'cors',
-      credentials: 'omit',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -40,7 +40,7 @@ class NewExpenseForm extends React.Component {
   }
   handleSubmit = (e) => {
     e.preventDefault()
-    this.postNewExpense((process.env.REACT_APP_API_SERVER + "/add-expense/" + process.env.REACT_APP_TEST_USER_PROVIDERID),
+    this.postNewExpense((process.env.REACT_APP_API_SERVER + "/add-expense"),
       ({
         receipt_name: this.state.newExpense.description, 
         amount: parseFloat(this.state.newExpense.amount), 
@@ -57,7 +57,7 @@ class NewExpenseForm extends React.Component {
     }))
   }
   fetchCategories() {
-    fetch(process.env.REACT_APP_API_SERVER + "/get-categories/" + process.env.REACT_APP_TEST_USER_PROVIDERID)
+    fetch(process.env.REACT_APP_API_SERVER + "/get-categories")
     .then(response => response.json())
     .then(data => {
         this.setState({ categories: data})
