@@ -175,15 +175,13 @@ function postNewExpense(userId, expense) {
 APP.get('/', ensureAuth, (req,res,next) => {
 	res.redirect('/app/')
 })
-
 APP.use('/login', express.static('public/login'));
 APP.use('/privacy', express.static('public/privacy'));
 APP.use('/app/', ensureAuth, express.static('public/app'));
 APP.use('/new-expense/', ensureAuth, express.static('public/app'));
 APP.use('/about', ensureAuth, express.static('public/app'))
 APP.use('/dashboard', ensureAuth, express.static('public/app'))
-
-
+APP.use('/404', ensureAuth, express.static('public/app'))
 
 // DATABASE API ROUTES
 
@@ -275,5 +273,11 @@ APP.get('/logout', function(req, res) {
 });
 
 APP.get('/error', (req, res) => res.send('error logging in'));
+
+APP.use(function(req, res, next){
+	res.status(404);
+	res.redirect('/404')
+  });
+
 
 APP.listen(PORT, () => console.log(`Expense APP listening on port ${PORT}!`));
