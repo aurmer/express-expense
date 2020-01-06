@@ -5,6 +5,7 @@ import Table from 'react-bootstrap/Table'
 // import Accordion from 'react-bootstrap/Accordion'
 // import Card from 'react-bootstrap/Card'
 import Dropdown from 'react-bootstrap/Dropdown'
+import Button from 'react-bootstrap/Button'
 
 import ReceiptModal from './ReceiptModal'
 
@@ -13,7 +14,8 @@ class ExpenseTable extends React.Component {
     super(props);
     this.state = {
         isFetching: false,
-        expenses: []
+        expenses: [],
+        expensesToReport: []
     };
   }
   fetchExpenses() {
@@ -22,6 +24,35 @@ class ExpenseTable extends React.Component {
       .then(data => {
         this.setState({ expenses: data})
       })
+  }
+  async postExpensesToGenerateReport(url = '', data) {
+    const response = await fetch(url, {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    return response
+  }
+  handleCheckboxesToReport = (e) => {
+    const checked = this.state.expensesToReport
+    let index
+
+    if (e.target.checked) {
+      checked.push(parseInt(e.target.value))
+    } else {
+      index = checked.indexOf(parseInt(e.target.value))
+      checked.splice(index, 1)
+    }
+    console.log('checked', checked)
+    this.setState({ expensesToReport: checked })
+  }
+  handleGenerateReport = (e) => {
+    e.preventDefault()
+    this.postExpensesToGenerateReport((process.env.REACT_APP_API_SERVER + "/generate-report"), this.state.expensesToReport)
   }
   renderTable(expenses, status) {
     let statusSortedExpenses = expenses.reduce((result, expense) => {
@@ -36,6 +67,7 @@ class ExpenseTable extends React.Component {
           <tr key={index}>
           <td>
             {expense.bucket_name}
+            <input type="checkbox" name="reportedExpense" value={expense.id} onChange={this.handleCheckboxesToReport}></input>
           </td>
           <td>
             {expense.expense_date}<br/>
@@ -72,22 +104,27 @@ class ExpenseTable extends React.Component {
   render() {
     return (
       <div id="expenseTable">
-        <h3>Not Submitted</h3>
-        <Table
-          bordered
-          hover
-          size="sm"
-        >
-          <thead>
-            <tr>
-              <th>Category</th>
-              <th>Description</th>
-              <th>Amount</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-            {this.renderTable(this.state.expenses, "Not submitted")}
-        </Table>
+        <form onSubmit={this.handleGenerateReport}>
+          <div className="table-header">
+            <h3>Not Submitted</h3>
+            <Button type="submit" className="generate-report-btn">Generate Report</Button>
+          </div>
+          <Table
+            bordered
+            hover
+            size="sm"
+          >
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+              {this.renderTable(this.state.expenses, "Not submitted")}
+          </Table>
+        </form>
         <h3>Pending</h3>
         <Table
           bordered

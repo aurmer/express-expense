@@ -95,7 +95,7 @@ class NewExpenseForm extends React.Component {
     
     return (
       <div>
-        <form onSubmit={this.handleSubmit} className="go-bottom">
+        <form id="newExpenseForm" onSubmit={this.handleSubmit} className="go-bottom">
           <div className="form-input-container">
             <ReceiptUpload />
           </div>

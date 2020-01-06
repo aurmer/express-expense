@@ -101,17 +101,28 @@ function getUser(userId) {
 	return db('users').where({ 'users.id': userId })
 }
 function getExpenses(userId) {
-	return db('expense_item')
-		.where({ 'expense_item.user_id': userId })
+	return db('buckets_categories' )
+		.where({ 'buckets_categories.user_id': userId })
 		.join(
-			'buckets_categories',
+			'expense_item', 
 			'expense_item.bucket_id',
+			'=',
 			'buckets_categories.id'
-		);
+		)
 }
 function getCategories(userId) {	
 	return db('buckets_categories')
 		.where({ 'buckets_categories.user_id': userId })
+}
+function moveExpenseToPending(expenseIdArray) {
+	// console.log(expenseIdArray)
+	expenseIdArray.forEach(expenseId => {
+		db('expense_item')
+			.where({ id: expenseId })
+			.update({ status: 'Pending' })
+			.then(console.log('expenseId ' + expenseId + ' status set to Pending'))
+	});
+	return expenseIdArray
 }
 function postNewCategory(userId, category) {
 	return db('buckets_categories')
@@ -159,6 +170,14 @@ APP.get('/get-expenses', ensureAuth, (req, res) => {
 		res.send(expenses);
 	});
 })
+// TEST FUNCTION FOR GETTING EXPENSES
+// APP.get('/get-expenses-noauth:userId', (req, res) => {
+// 	console.log('incoming request for expenses for user: ' + req.params.userId);
+// 	getExpenses(req.params.userId)
+// 		.then(expenses => {
+// 		res.send(expenses);
+// 	});
+// })
 APP.get('/get-categories', ensureAuth, (req, res) => {
 	console.log('incoming request for categories for user: ', req.user)
 	getCategories(req.user)
@@ -179,7 +198,11 @@ APP.post('/add-expense/', ensureAuth, (req, res) => {
 	postNewExpense(req.user, req.body)
 		.then(res.send(console.log('success')))
 })
-
+APP.post('/generate-report', ensureAuth, (req, res) => {
+	console.log('new report request for user: ', req.user)
+	moveExpenseToPending(req.body)
+	res.send(console.log('generate-report post done'))
+})
 //Authentication Routes//
 
 //Google Auth//
@@ -225,7 +248,7 @@ APP.get(
 APP.get('/logout', function (req, res){
 	console.log(req.session)
 	req.session.destroy(function (err) {
-	  res.redirect('/login');
+		res.redirect('/login');
 	});
   });
 
