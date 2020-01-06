@@ -40,10 +40,10 @@ class NewExpenseForm extends React.Component {
   }
   handleSubmit = (e) => {
     e.preventDefault()
-    this.postNewExpense((process.env.REACT_APP_API_SERVER + "/add-expense"),
+    this.postNewExpense(("add-expense"),
       ({
-        receipt_name: this.state.newExpense.description, 
-        amount: parseFloat(this.state.newExpense.amount), 
+        receipt_name: this.state.newExpense.description,
+        amount: parseFloat(this.state.newExpense.amount),
         expense_date: this.state.newExpense.date,
         bucket_id: parseInt(this.state.newExpense.category)
       }))
@@ -57,7 +57,7 @@ class NewExpenseForm extends React.Component {
     }))
   }
   fetchCategories() {
-    fetch(process.env.REACT_APP_API_SERVER + "/get-categories")
+    fetch("/get-categories")
     .then(response => response.json())
     .then(data => {
         this.setState({ categories: data})
@@ -92,7 +92,7 @@ class NewExpenseForm extends React.Component {
     //     <div className="box__error">Error! <span></span>.</div>
     //   </>
     // )
-    
+
     return (
       <div>
         <form id="newExpenseForm" onSubmit={this.handleSubmit} className="go-bottom">

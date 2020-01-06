@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 var cors = require('cors');
+const util = require('util');
 const APP = express();
 APP.use(cors());
 APP.use(express.json());
@@ -156,10 +157,11 @@ function postNewExpense(userId, expense) {
 
 // SERVER API ROUTES
 
-// APP.get('*', (req, res, next) => {
-// 	console.log(req.originalUrl);
-// 	next();
-// });
+APP.get('*', (req, res, next) => {
+
+	console.log("NEW REQUEST:\n",req.originalUrl);
+	next();
+});
 
 APP.get('/', ensureAuth, (req, res, next) => {
 	res.redirect('/new-expense');
@@ -168,10 +170,13 @@ APP.get('/', ensureAuth, (req, res, next) => {
 APP.use('/login', express.static('public/login'));
 APP.use('/privacy', express.static('public/privacy'));
 APP.use('/app', ensureAuth, express.static('public/app'));
-APP.use('/new-expense/', ensureAuth, express.static('public/app'));
-APP.use('/about', ensureAuth, express.static('public/app'));
-APP.use('/dashboard', ensureAuth, express.static('public/app'));
-APP.use('/404', ensureAuth, express.static('public/app'));
+APP.use('/new-expense', ensureAuth, express.static('public/app'));
+APP.use('/about', ensureAuth, express.static('public/app'))
+APP.use('/dashboard', ensureAuth, express.static('public/app'))
+APP.use('/404', ensureAuth, express.static('public/app'))
+
+
+
 
 // DATABASE API ROUTES
 
