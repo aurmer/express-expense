@@ -164,6 +164,7 @@ APP.get('/', ensureAuth, (req,res,next) => {
 })
 
 APP.use('/login', express.static('public/login'));
+APP.use('/privacy', express.static('public/privacy'));
 APP.use('/app/', ensureAuth, express.static('public/app'));
 
 // DATABASE API ROUTES
