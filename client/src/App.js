@@ -3,7 +3,6 @@ import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 
 import AppNavbar from './components/AppNavbar'
-import Login from './components/Login'
 import NewExpense from './components/NewExpense'
 import Dashboard from './components/Dashboard'
 
@@ -25,6 +24,7 @@ function App() {
             <Route path="/about">
               <h1>About</h1>
             </Route>
+            <Route exact path="/logout" render={() => {window.location.href="/logout"}} />
           </Switch>
         </div>
       </Router>

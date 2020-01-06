@@ -7,7 +7,6 @@ import { NavLink } from "react-router-dom"
 const AppNavbar = () => {
   // hook for configuring navbar mobile menu to close when clicking a link
   const [expanded, setExpanded] = React.useState(false);
-
   return (
     <Navbar expanded={expanded} expand="sm" bg="light" variant="light" fixed="top">
       <Navbar.Brand href="/">
@@ -20,6 +19,7 @@ const AppNavbar = () => {
           <NavLink onClick={() => setExpanded(false)} className="nav-link" to="/new-expense">New Expense</NavLink>       
           <NavLink onClick={() => setExpanded(false)} className="nav-link" to="/dashboard">Dashboard</NavLink>
           <NavLink onClick={() => setExpanded(false)} className="nav-link" to="/about">About</NavLink>
+          <NavLink onClick={() => setExpanded(false)} className="nav-link" to="/logout">Logout</NavLink>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
