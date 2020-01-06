@@ -162,12 +162,12 @@ function postNewExpense(userId, expense) {
 // });
 
 APP.get('/', ensureAuth, (req,res,next) => {
-	res.redirect('/app/')
+	res.redirect('/new-expense')
 })
 
 APP.use('/login', express.static('public/login'));
 APP.use('/privacy', express.static('public/privacy'));
-APP.use('/app/', ensureAuth, express.static('public/app'));
+APP.use('/app', ensureAuth, express.static('public/app'));
 APP.use('/new-expense/', ensureAuth, express.static('public/app'));
 APP.use('/about', ensureAuth, express.static('public/app'))
 APP.use('/dashboard', ensureAuth, express.static('public/app'))
@@ -234,7 +234,7 @@ APP.get(
 	'/auth/google/callback',
 	passport.authenticate('google', { failureRedirect: '/' }),
 	function(req, res) {
-		res.redirect('/app');
+		res.redirect('/new-expense');
 	}
 );
 
@@ -250,10 +250,10 @@ APP.get(
 APP.get(
 	'/auth/facebook/callback',
 	passport.authenticate('facebook', {
-		failureRedirect: '/app',
+		failureRedirect: '/login',
 	}),
 	function(req, res) {
-		res.redirect('/app');
+		res.redirect('/new-expense');
 	}
 );
 

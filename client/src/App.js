@@ -16,7 +16,7 @@ function App() {
         <AppNavbar/>
         <div className="container">
           <Switch>
-            <Route path="/(new-expense|app)/">
+            <Route path="/new-expense/">
               <NewExpense/>
             </Route>
             <Route path="/dashboard">
