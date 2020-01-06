@@ -88,7 +88,6 @@ passport.deserializeUser((user, done) => {
 	done(null, user);
 });
 
-
 function ensureAuth(req, res, next) {
 	console.log('user login status:', req.isAuthenticated());
 	if (req.isAuthenticated()) {
@@ -165,7 +164,7 @@ APP.get('*', (req, res, next) => {
 });
 
 APP.get('/', ensureAuth, (req,res,next) => {
-	res.redirect('/app')
+	res.redirect('/new-expense')
 })
 
 APP.use('/login', express.static('public/login'));
@@ -174,6 +173,8 @@ APP.use('/app', ensureAuth, express.static('public/app'));
 APP.use('/new-expense', ensureAuth, express.static('public/app'));
 APP.use('/about', ensureAuth, express.static('public/app'))
 APP.use('/dashboard', ensureAuth, express.static('public/app'))
+APP.use('/404', ensureAuth, express.static('public/app'))
+
 
 
 
@@ -235,7 +236,7 @@ APP.get(
 	'/auth/google/callback',
 	passport.authenticate('google', { failureRedirect: '/' }),
 	function(req, res) {
-		res.redirect('/app');
+		res.redirect('/new-expense');
 	}
 );
 
@@ -251,10 +252,10 @@ APP.get(
 APP.get(
 	'/auth/facebook/callback',
 	passport.authenticate('facebook', {
-		failureRedirect: '/app',
+		failureRedirect: '/login',
 	}),
 	function(req, res) {
-		res.redirect('/app');
+		res.redirect('/new-expense');
 	}
 );
 
@@ -267,5 +268,11 @@ APP.get('/logout', function(req, res) {
 });
 
 APP.get('/error', (req, res) => res.send('error logging in'));
+
+APP.use(function (req, res, next) {
+	res.status(404)
+	console.log(req.originalUrl)
+	res.redirect('/404')
+  })
 
 APP.listen(PORT, () => console.log(`Expense APP listening on port ${PORT}!`));

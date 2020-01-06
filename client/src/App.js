@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 import AppNavbar from './components/AppNavbar'
 import NewExpense from './components/NewExpense'
 import Dashboard from './components/Dashboard'
+import PageNotFound from './components/PageNotFound'
 
 require('dotenv').config();
 
@@ -15,7 +16,7 @@ function App() {
         <AppNavbar/>
         <div className="container">
           <Switch>
-            <Route path="/(new-expense|app)/">
+            <Route path="/new-expense/">
               <NewExpense/>
             </Route>
             <Route path="/dashboard">
@@ -25,6 +26,7 @@ function App() {
               <h1>About</h1>
             </Route>
             <Route exact path="/logout" render={() => {window.location.href="/logout"}} />
+            <Route component={PageNotFound} />
           </Switch>
         </div>
       </Router>
