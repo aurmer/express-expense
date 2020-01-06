@@ -112,18 +112,29 @@ function getUser(userId) {
 	return db('users').where({ 'users.id': userId });
 }
 function getExpenses(userId) {
-	return db('expense_item')
-		.where({ 'expense_item.user_id': userId })
+	return db('buckets_categories' )
+		.where({ 'buckets_categories.user_id': userId })
 		.join(
-			'buckets_categories',
+			'expense_item', 
 			'expense_item.bucket_id',
+			'=',
 			'buckets_categories.id'
-		);
+		)
 }
 function getCategories(userId) {
 	return db('buckets_categories').where({
 		'buckets_categories.user_id': userId,
 	});
+}
+function moveExpenseToPending(expenseIdArray) {
+	// console.log(expenseIdArray)
+	expenseIdArray.forEach(expenseId => {
+		db('expense_item')
+			.where({ id: expenseId })
+			.update({ status: 'Pending' })
+			.then(console.log('expenseId ' + expenseId + ' status set to Pending'))
+	});
+	return expenseIdArray
 }
 function postNewCategory(userId, category) {
 	return (
@@ -180,6 +191,7 @@ APP.get('/get-expenses', ensureAuth, (req, res) => {
 		res.send(expenses);
 	});
 });
+
 APP.get('/get-categories', ensureAuth, (req, res) => {
 	console.log('incoming request for categories for user: ', req.user);
 	getCategories(req.user).then(categories => {
@@ -195,9 +207,16 @@ APP.post('/add-category', ensureAuth, (req, res) => {
 		});
 });
 APP.post('/add-expense/', ensureAuth, (req, res) => {
-	console.log('new expense for user: ', req.user);
-	postNewExpense(req.user, req.body).then(res.send(console.log('success')));
-});
+
+	console.log('new expense for user: ', req.user)
+	postNewExpense(req.user, req.body)
+		.then(res.send(console.log('success')))
+})
+APP.post('/generate-report', ensureAuth, (req, res) => {
+	console.log('new report request for user: ', req.user)
+	moveExpenseToPending(req.body)
+	res.send(console.log('generate-report post done'))
+})
 
 //Authentication Routes//
 
@@ -239,6 +258,7 @@ APP.get(
 		res.redirect('/app');
 	}
 );
+
 
 APP.get('/logout', function(req, res) {
 	console.log(req.session);
