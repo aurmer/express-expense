@@ -12,7 +12,7 @@ const passport = require('passport'),
 	FacebookStrategy = require('passport-facebook').Strategy,
 	GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
-const DOMAIN = process.env.DOMAIN
+const DOMAIN = process.env.DOMAIN;
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
@@ -103,14 +103,14 @@ function getUser(userId) {
 	return db('users').where({ 'users.id': userId });
 }
 function getExpenses(userId) {
-	return db('buckets_categories' )
+	return db('buckets_categories')
 		.where({ 'buckets_categories.user_id': userId })
 		.join(
-			'expense_item', 
+			'expense_item',
 			'expense_item.bucket_id',
 			'=',
 			'buckets_categories.id'
-		)
+		);
 }
 function getCategories(userId) {
 	return db('buckets_categories').where({
@@ -123,9 +123,9 @@ function moveExpenseToPending(expenseIdArray) {
 		db('expense_item')
 			.where({ id: expenseId })
 			.update({ status: 'Pending' })
-			.then(console.log('expenseId ' + expenseId + ' status set to Pending'))
+			.then(console.log('expenseId ' + expenseId + ' status set to Pending'));
 	});
-	return expenseIdArray
+	return expenseIdArray;
 }
 function postNewCategory(userId, category) {
 	return (
@@ -161,20 +161,17 @@ function postNewExpense(userId, expense) {
 // 	next();
 // });
 
-APP.get('/', ensureAuth, (req,res,next) => {
-	res.redirect('/new-expense')
-})
+APP.get('/', ensureAuth, (req, res, next) => {
+	res.redirect('/new-expense');
+});
 
 APP.use('/login', express.static('public/login'));
 APP.use('/privacy', express.static('public/privacy'));
 APP.use('/app', ensureAuth, express.static('public/app'));
 APP.use('/new-expense/', ensureAuth, express.static('public/app'));
-APP.use('/about', ensureAuth, express.static('public/app'))
-APP.use('/dashboard', ensureAuth, express.static('public/app'))
-APP.use('/404', ensureAuth, express.static('public/app'))
-
-
-
+APP.use('/about', ensureAuth, express.static('public/app'));
+APP.use('/dashboard', ensureAuth, express.static('public/app'));
+APP.use('/404', ensureAuth, express.static('public/app'));
 
 // DATABASE API ROUTES
 
@@ -205,16 +202,14 @@ APP.post('/add-category', ensureAuth, (req, res) => {
 		});
 });
 APP.post('/add-expense/', ensureAuth, (req, res) => {
-
-	console.log('new expense for user: ', req.user)
-	postNewExpense(req.user, req.body)
-		.then(res.send(console.log('success')))
-})
+	console.log('new expense for user: ', req.user);
+	postNewExpense(req.user, req.body).then(res.send(console.log('success')));
+});
 APP.post('/generate-report', ensureAuth, (req, res) => {
-	console.log('new report request for user: ', req.user)
-	moveExpenseToPending(req.body)
-	res.send(console.log('generate-report post done'))
-})
+	console.log('new report request for user: ', req.user);
+	moveExpenseToPending(req.body);
+	res.send(console.log('generate-report post done'));
+});
 
 //Authentication Routes//
 
@@ -257,7 +252,6 @@ APP.get(
 	}
 );
 
-
 APP.get('/logout', function(req, res) {
 	console.log(req.session);
 	req.session.destroy(function(err) {
@@ -267,10 +261,10 @@ APP.get('/logout', function(req, res) {
 
 APP.get('/error', (req, res) => res.send('error logging in'));
 
-APP.use(function (req, res, next) {
-	res.status(404)
-	console.log(req.originalUrl)
-	res.redirect('/404')
-  })
+APP.use(function(req, res, next) {
+	res.status(404);
+	console.log(req.originalUrl);
+	res.redirect('/404');
+});
 
 APP.listen(PORT, () => console.log(`Expense APP listening on port ${PORT}!`));
