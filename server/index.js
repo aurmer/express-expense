@@ -12,6 +12,8 @@ const passport = require('passport'),
 	FacebookStrategy = require('passport-facebook').Strategy,
 	GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
+const DOMAIN = process.env.DOMAIN
+
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
@@ -27,7 +29,7 @@ passport.use(
 		{
 			clientID: GOOGLE_CLIENT_ID,
 			clientSecret: GOOGLE_CLIENT_SECRET,
-			callbackURL: 'http://localhost:9000/auth/google/callback',
+			callbackURL: `http://${DOMAIN}/auth/google/callback`,
 		},
 		(accessToken, refreshToken, profile, done) => {
 			findOrCreate(profile, function(err, user) {
@@ -42,7 +44,7 @@ passport.use(
 		{
 			clientID: FACEBOOK_APP_ID,
 			clientSecret: FACEBOOK_APP_SECRET,
-			callbackURL: 'http://localhost:9000/auth/facebook/callback',
+			callbackURL: `http://${DOMAIN}/auth/facebook/callback`,
 			profileFields: [
 				'id',
 				'email',

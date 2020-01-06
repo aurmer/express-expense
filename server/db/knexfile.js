@@ -28,6 +28,21 @@ module.exports = {
     }
   },
 
+  production: {
+    client: 'pg',
+    connection: {
+      database: 'expense_database',
+      user:     'postgres',
+      password: 'yearight'
+    },
+    migrations: {
+      directory: __dirname + '/knex/migrations',
+    },
+    seeds: {
+      directory: __dirname + '/knex/seeds'
+    }
+  },
+
 
   // staging: {
   //   client: 'pg',
