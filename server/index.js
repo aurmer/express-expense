@@ -5,7 +5,7 @@ var cors = require('cors');
 const APP = express();
 APP.use(cors());
 APP.use(express.json());
-APP.use(express.urlencoded({ extended: true }))
+APP.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3000;
 const { db } = require('./db/dbConnection');
 const passport = require('passport'),
@@ -86,9 +86,20 @@ passport.deserializeUser((user, done) => {
 });
 
 function ensureAuth(req, res, next) {
-	console.log('user login status:', req.isAuthenticated())
+	console.log('user login status:', req.isAuthenticated());
 	if (req.isAuthenticated()) {
-		console.log('user id: ', req.user)
+		console.log('user id: ', req.user);
+		next();
+	} else {
+		res.redirect('/login');
+	}
+}
+
+
+function ensureAuth(req, res, next) {
+	console.log('user login status:', req.isAuthenticated());
+	if (req.isAuthenticated()) {
+		console.log('user id: ', req.user);
 		next();
 	} else {
 		res.redirect('/login');
@@ -98,7 +109,7 @@ function ensureAuth(req, res, next) {
 // Test DB Connections //
 
 function getUser(userId) {
-	return db('users').where({ 'users.id': userId })
+	return db('users').where({ 'users.id': userId });
 }
 function getExpenses(userId) {
 	return db('buckets_categories' )
@@ -110,9 +121,10 @@ function getExpenses(userId) {
 			'buckets_categories.id'
 		)
 }
-function getCategories(userId) {	
-	return db('buckets_categories')
-		.where({ 'buckets_categories.user_id': userId })
+function getCategories(userId) {
+	return db('buckets_categories').where({
+		'buckets_categories.user_id': userId,
+	});
 }
 function moveExpenseToPending(expenseIdArray) {
 	// console.log(expenseIdArray)
@@ -125,75 +137,76 @@ function moveExpenseToPending(expenseIdArray) {
 	return expenseIdArray
 }
 function postNewCategory(userId, category) {
-	return db('buckets_categories')
-		// .where({ 'buckets_categories.user_id': userId })
-		.insert([{
-			user_id: userId,
-			bucket_name: category.bucket_name
-		}])
+	return (
+		db('buckets_categories')
+			// .where({ 'buckets_categories.user_id': userId })
+			.insert([
+				{
+					user_id: userId,
+					bucket_name: category.bucket_name,
+				},
+			])
+	);
 }
 function postNewExpense(userId, expense) {
 	return db('expense_item')
 		.where({ 'expense_item.user_id': userId })
-		.insert([{ 
-			receipt_name: expense.receipt_name,
-			amount: expense.amount,
-			expense_date: expense.expense_date, 
-			status: 'Not submitted',
-			bucket_id: expense.bucket_id,
-			user_id: userId
-		}])
+		.insert([
+			{
+				receipt_name: expense.receipt_name,
+				amount: expense.amount,
+				expense_date: expense.expense_date,
+				status: 'Not submitted',
+				bucket_id: expense.bucket_id,
+				user_id: userId,
+			},
+		]);
 }
 
 // SERVER API ROUTES
 
-APP.get('*', (req, res, next)=>{
-	console.log(req.originalUrl)
-	next()
+// APP.get('*', (req, res, next) => {
+// 	console.log(req.originalUrl);
+// 	next();
+// });
+
+APP.get('/', ensureAuth, (req,res,next) => {
+	res.redirect('/app/')
 })
 
-APP.use('/login',express.static('public/login'));
+APP.use('/login', express.static('public/login'));
 APP.use('/app/', ensureAuth, express.static('public/app'));
 
 // DATABASE API ROUTES
 
 APP.get('/get-user', ensureAuth, (req, res, next) => {
-	getUser(req.user)
-		.then(response => {
+	getUser(req.user).then(response => {
 		res.send(response);
 	});
 });
 APP.get('/get-expenses', ensureAuth, (req, res) => {
 	console.log('incoming request for expenses for user: ' + req.user);
-	getExpenses(req.user)
-		.then(expenses => {
+	getExpenses(req.user).then(expenses => {
 		res.send(expenses);
 	});
-})
-// TEST FUNCTION FOR GETTING EXPENSES
-// APP.get('/get-expenses-noauth:userId', (req, res) => {
-// 	console.log('incoming request for expenses for user: ' + req.params.userId);
-// 	getExpenses(req.params.userId)
-// 		.then(expenses => {
-// 		res.send(expenses);
-// 	});
-// })
+});
+
 APP.get('/get-categories', ensureAuth, (req, res) => {
-	console.log('incoming request for categories for user: ', req.user)
-	getCategories(req.user)
-		.then(categories => {
-			res.send(categories)
-		})
-})
+	console.log('incoming request for categories for user: ', req.user);
+	getCategories(req.user).then(categories => {
+		res.send(categories);
+	});
+});
 APP.post('/add-category', ensureAuth, (req, res) => {
-	console.log('new category for user: ' + req.user)
+	console.log('new category for user: ' + req.user);
 	postNewCategory(req.user, req.body)
 		.then(getCategories(req.user))
 		.then(categories => {
-			res.send(categories)
-		})
-})
+			res.send(categories);
+		});
+});
 APP.post('/add-expense/', ensureAuth, (req, res) => {
+
 	console.log('new expense for user: ', req.user)
 	postNewExpense(req.user, req.body)
 		.then(res.send(console.log('success')))
@@ -203,6 +216,7 @@ APP.post('/generate-report', ensureAuth, (req, res) => {
 	moveExpenseToPending(req.body)
 	res.send(console.log('generate-report post done'))
 })
+
 //Authentication Routes//
 
 //Google Auth//
@@ -237,7 +251,6 @@ APP.get(
 APP.get(
 	'/auth/facebook/callback',
 	passport.authenticate('facebook', {
-		//   successRedirect: '/',
 		failureRedirect: '/app',
 	}),
 	function(req, res) {
@@ -245,17 +258,13 @@ APP.get(
 	}
 );
 
-APP.get('/logout', function (req, res){
-	console.log(req.session)
-	req.session.destroy(function (err) {
+
+APP.get('/logout', function(req, res) {
+	console.log(req.session);
+	req.session.destroy(function(err) {
 		res.redirect('/login');
 	});
-  });
-
-// APP.get('/success', ensureAuth, (req, res) => {
-// 	console.log(req.query.givenName);
-// 	res.send('Welcome '+ req.user + '!!');
-// });
+});
 
 APP.get('/error', (req, res) => res.send('error logging in'));
 
