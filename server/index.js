@@ -246,11 +246,6 @@ APP.get('/logout', function(req, res) {
 	});
 });
 
-// APP.get('/success', ensureAuth, (req, res) => {
-// 	console.log(req.query.givenName);
-// 	res.send('Welcome '+ req.user + '!!');
-// });
-
 APP.get('/error', (req, res) => res.send('error logging in'));
 
 APP.listen(PORT, () => console.log(`Expense APP listening on port ${PORT}!`));
