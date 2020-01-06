@@ -95,6 +95,17 @@ function ensureAuth(req, res, next) {
 	}
 }
 
+
+function ensureAuth(req, res, next) {
+	console.log('user login status:', req.isAuthenticated());
+	if (req.isAuthenticated()) {
+		console.log('user id: ', req.user);
+		next();
+	} else {
+		res.redirect('/login');
+	}
+}
+
 // Test DB Connections //
 
 function getUser(userId) {
@@ -143,14 +154,17 @@ function postNewExpense(userId, expense) {
 
 // SERVER API ROUTES
 
-APP.get('*', (req, res, next) => {
-	console.log(req.originalUrl);
-	next();
-});
+// APP.get('*', (req, res, next) => {
+// 	console.log(req.originalUrl);
+// 	next();
+// });
+
+APP.get('/', ensureAuth, (req,res,next) => {
+	res.redirect('/app/')
+})
 
 APP.use('/login', express.static('public/login'));
 APP.use('/app/', ensureAuth, express.static('public/app'));
-APP.use('/', express.static('public/app'));
 
 // DATABASE API ROUTES
 
