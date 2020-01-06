@@ -15,10 +15,12 @@
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "knex": "^0.20.4",
+    "node-jsx": "^0.13.3",
     "nodemon": "^2.0.2",
     "passport": "^0.4.1",
     "passport-facebook": "^3.0.0",
     "passport-google-oauth": "^2.0.0",
-    "pg": "^7.15.1"
+    "pg": "^7.15.1",
+    "react": "^16.12.0"
   }
 }
