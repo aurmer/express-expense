@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 var cors = require('cors');
+const util = require('util');
 const APP = express();
 APP.use(cors());
 APP.use(express.json());
@@ -87,16 +88,6 @@ passport.deserializeUser((user, done) => {
 	done(null, user);
 });
 
-function ensureAuth(req, res, next) {
-	console.log('user login status:', req.isAuthenticated());
-	if (req.isAuthenticated()) {
-		console.log('user id: ', req.user);
-		next();
-	} else {
-		res.redirect('/login');
-	}
-}
-
 
 function ensureAuth(req, res, next) {
 	console.log('user login status:', req.isAuthenticated());
@@ -117,7 +108,7 @@ function getExpenses(userId) {
 	return db('buckets_categories' )
 		.where({ 'buckets_categories.user_id': userId })
 		.join(
-			'expense_item', 
+			'expense_item',
 			'expense_item.bucket_id',
 			'=',
 			'buckets_categories.id'
@@ -167,10 +158,11 @@ function postNewExpense(userId, expense) {
 
 // SERVER API ROUTES
 
-// APP.get('*', (req, res, next) => {
-// 	console.log(req.originalUrl);
-// 	next();
-// });
+APP.get('*', (req, res, next) => {
+
+	console.log("NEW REQUEST:\n",req.originalUrl);
+	next();
+});
 
 APP.get('/', ensureAuth, (req,res,next) => {
 	res.redirect('/app/')
@@ -178,7 +170,7 @@ APP.get('/', ensureAuth, (req,res,next) => {
 
 APP.use('/login', express.static('public/login'));
 APP.use('/privacy', express.static('public/privacy'));
-APP.use('/app/', ensureAuth, express.static('public/app'));
+APP.use('/app', ensureAuth, express.static('public/app'));
 APP.use('/new-expense/', ensureAuth, express.static('public/app'));
 APP.use('/about', ensureAuth, express.static('public/app'))
 APP.use('/dashboard', ensureAuth, express.static('public/app'))

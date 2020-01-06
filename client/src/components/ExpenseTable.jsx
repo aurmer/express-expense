@@ -19,7 +19,7 @@ class ExpenseTable extends React.Component {
     };
   }
   fetchExpenses() {
-    fetch(process.env.REACT_APP_API_SERVER + "/get-expenses")
+    fetch("get-expenses")
       .then(response => response.json())
       .then(data => {
         this.setState({ expenses: data})
@@ -52,7 +52,7 @@ class ExpenseTable extends React.Component {
   }
   handleGenerateReport = (e) => {
     e.preventDefault()
-    this.postExpensesToGenerateReport((process.env.REACT_APP_API_SERVER + "/generate-report"), this.state.expensesToReport)
+    this.postExpensesToGenerateReport(("generate-report"), this.state.expensesToReport)
   }
   renderTable(expenses, status) {
     let statusSortedExpenses = expenses.reduce((result, expense) => {
@@ -159,7 +159,7 @@ class ExpenseTable extends React.Component {
         </Table>
       </div>
     )
-  } 
+  }
 }
 
 export default ExpenseTable
