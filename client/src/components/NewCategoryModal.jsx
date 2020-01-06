@@ -26,16 +26,16 @@ const NewCategoryModal = () => {
   }
   const handleSave = e => {
     e.preventDefault()
-    postNewCategory((process.env.REACT_APP_API_SERVER + "/add-category"), {bucket_name: bucketName})
+    postNewCategory(("add-category"), {bucket_name: bucketName})
     setShow(false);
   }
   const handleShow = () => setShow(true);
 
   return (
     <>
-      <Button 
-        block 
-        variant="secondary" 
+      <Button
+        block
+        variant="secondary"
         onClick={handleShow}
       >
         Add
