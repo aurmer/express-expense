@@ -19,7 +19,7 @@ class ExpenseTable extends React.Component {
     };
   }
   fetchExpenses() {
-    fetch("get-expenses")
+    fetch("/get-expenses")
       .then(response => response.json())
       .then(data => {
         this.setState({ expenses: data})

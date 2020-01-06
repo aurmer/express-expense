@@ -10,7 +10,7 @@ class Dashboard extends React.Component {
     }
   }
   fetchUserName() {
-    fetch("get-user")
+    fetch("/get-user")
       .then(response => response.json())
       .then(data => {
         this.setState({ greeting: "Hello, " + data[0].first_name + "!" })

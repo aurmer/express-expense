@@ -165,13 +165,13 @@ APP.get('*', (req, res, next) => {
 });
 
 APP.get('/', ensureAuth, (req,res,next) => {
-	res.redirect('/app/')
+	res.redirect('/app')
 })
 
 APP.use('/login', express.static('public/login'));
 APP.use('/privacy', express.static('public/privacy'));
 APP.use('/app', ensureAuth, express.static('public/app'));
-APP.use('/new-expense/', ensureAuth, express.static('public/app'));
+APP.use('/new-expense', ensureAuth, express.static('public/app'));
 APP.use('/about', ensureAuth, express.static('public/app'))
 APP.use('/dashboard', ensureAuth, express.static('public/app'))
 
