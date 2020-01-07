@@ -128,6 +128,14 @@ function moveExpenseToPending(expenseIdArray) {
 	});
 	return expenseIdArray;
 }
+function markExpenseAsPaid(expenseIdArray) {
+	expenseIdArray.forEach(expenseId => {
+		db('expense_item')
+			.where({ id: expenseId })
+			.update({ status: 'Paid' })
+			.then(console.log('expenseId ' + expenseId + ' status set to Paid'))
+	})
+}
 function postNewCategory(userId, category) {
 	return (
 		db('buckets_categories')
@@ -212,7 +220,7 @@ APP.post('/add-category', ensureAuth, (req, res) => {
 			res.send(categories);
 		});
 });
-APP.post('/add-expense/', ensureAuth, (req, res) => {
+APP.post('/add-expense', ensureAuth, (req, res) => {
 	console.log('new expense for user: ', req.user);
 	postNewExpense(req.user, req.body).then(res.send(console.log('success')));
 });
@@ -221,6 +229,11 @@ APP.post('/generate-report', ensureAuth, (req, res) => {
 	moveExpenseToPending(req.body);
 	res.send(console.log('generate-report post done'));
 });
+APP.post('/mark-as-paid', ensureAuth, (req, res) => {
+	console.log('user ' + req.user + ' marking expenses ' + req.body) + ' as paid';
+	markExpenseAsPaid(req.body);
+	res.send(console.log('mark-as-paid done'))
+})
 APP.post('/delete-expense', ensureAuth, (req, res) => {
 	console.log('new request to delete expense id', req.body.id);
 	deleteExpense(req.body.id);

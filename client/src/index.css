@@ -319,9 +319,6 @@ th:nth-child(3), th:nth-child(4) {
   justify-content: space-between;
   align-items: baseline;
 }
-.generate-report-btn {
-  height: 33.6px
-}
 .box__dragndrop,
 .box__uploading,
 .box__success,
