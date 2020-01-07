@@ -15,9 +15,7 @@ function findOrCreate(profile, done) {
 						provider: profile.provider,
 						providerId: profile.id,
 					})
-					.catch(err => {
-						console.error('Error creating new user - ', err);
-					})
+					
 					.then(() => {
 						db('users')
 							.where({ providerId: profile.id })
@@ -26,8 +24,8 @@ function findOrCreate(profile, done) {
 								if (user) {
 									return done(null, user);
 								}
-								return done(null, user);
-							});
+							return done(null, user);
+						});
 					});
 			}
 			if (user) {
