@@ -17,8 +17,18 @@ function findOrCreate(profile, done) {
 					})
 					.catch(err => {
 						console.error('Error creating new user - ', err);
+					})
+					.then(() => {
+						db('users')
+							.where({ providerId: profile.id })
+							.then(res => {
+								const user = res[0];
+								if (user) {
+									return done(null, user);
+								}
+								return done(null, user);
+							});
 					});
-				return done(null, user);
 			}
 			if (user) {
 				return done(null, user);

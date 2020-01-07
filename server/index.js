@@ -13,7 +13,7 @@ const passport = require('passport'),
 	FacebookStrategy = require('passport-facebook').Strategy,
 	GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
-const DOMAIN = process.env.DOMAIN
+const DOMAIN = process.env.DOMAIN;
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
@@ -104,14 +104,14 @@ function getUser(userId) {
 	return db('users').where({ 'users.id': userId });
 }
 function getExpenses(userId) {
-	return db('buckets_categories' )
+	return db('buckets_categories')
 		.where({ 'buckets_categories.user_id': userId })
 		.join(
 			'expense_item',
 			'expense_item.bucket_id',
 			'=',
 			'buckets_categories.id'
-		)
+		);
 }
 function getCategories(userId) {
 	return db('buckets_categories').where({
@@ -124,9 +124,9 @@ function moveExpenseToPending(expenseIdArray) {
 		db('expense_item')
 			.where({ id: expenseId })
 			.update({ status: 'Pending' })
-			.then(console.log('expenseId ' + expenseId + ' status set to Pending'))
+			.then(console.log('expenseId ' + expenseId + ' status set to Pending'));
 	});
-	return expenseIdArray
+	return expenseIdArray;
 }
 function postNewCategory(userId, category) {
 	return (
@@ -159,12 +159,12 @@ function postNewExpense(userId, expense) {
 
 APP.get('*', (req, res, next) => {
 
-	console.log("NEW REQUEST:\n",req.originalUrl);
+	// console.log("NEW REQUEST:\n",req.originalUrl);
 	next();
 });
 
 APP.get('/', ensureAuth, (req,res,next) => {
-	res.redirect('/new-expense/')
+	res.redirect('/new-expense/');
 })
 
 APP.use('/login', express.static('public/login'));
@@ -207,16 +207,14 @@ APP.post('/add-category', ensureAuth, (req, res) => {
 		});
 });
 APP.post('/add-expense/', ensureAuth, (req, res) => {
-
-	console.log('new expense for user: ', req.user)
-	postNewExpense(req.user, req.body)
-		.then(res.send(console.log('success')))
-})
+	console.log('new expense for user: ', req.user);
+	postNewExpense(req.user, req.body).then(res.send(console.log('success')));
+});
 APP.post('/generate-report', ensureAuth, (req, res) => {
-	console.log('new report request for user: ', req.user)
-	moveExpenseToPending(req.body)
-	res.send(console.log('generate-report post done'))
-})
+	console.log('new report request for user: ', req.user);
+	moveExpenseToPending(req.body);
+	res.send(console.log('generate-report post done'));
+});
 
 //Authentication Routes//
 
@@ -258,7 +256,6 @@ APP.get(
 		res.redirect('/new-expense/');
 	}
 );
-
 
 APP.get('/logout', function(req, res) {
 	console.log(req.session);
