@@ -159,7 +159,7 @@ function postNewExpense(userId, expense) {
 
 APP.get('*', (req, res, next) => {
 
-	console.log("NEW REQUEST:\n",req.originalUrl);
+	// console.log("NEW REQUEST:\n",req.originalUrl);
 	next();
 });
 
@@ -268,7 +268,7 @@ APP.get('/error', (req, res) => res.send('error logging in'));
 
 APP.use(function(req, res, next) {
 	res.status(404);
-	console.log(req.originalUrl);
+	// console.log(req.originalUrl);
 	res.redirect('/404');
 });
 
