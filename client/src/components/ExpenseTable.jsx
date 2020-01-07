@@ -15,7 +15,8 @@ class ExpenseTable extends React.Component {
     this.state = {
         isFetching: false,
         expenses: [],
-        expensesToReport: []
+        expensesToReport: [],
+        expensesPaid: []
     };
   }
   deepCopy (oldObject) {
@@ -40,7 +41,7 @@ class ExpenseTable extends React.Component {
     });
     return response
   }
-    async postDeleteExpense(url = '', data = {}) {
+  async postExpensesAsPaid(url = '', data) {
     const response = await fetch(url, {
       method: 'POST',
       mode: 'cors',
@@ -50,6 +51,18 @@ class ExpenseTable extends React.Component {
       },
       body: JSON.stringify(data)
     });
+    return response
+  }
+  async postDeleteExpense(url = '', data = {}) {
+  const response = await fetch(url, {
+    method: 'POST',
+    mode: 'cors',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
     return response
   }
   handleCheckboxesToReport = (e) => {
@@ -62,12 +75,29 @@ class ExpenseTable extends React.Component {
       index = checked.indexOf(parseInt(e.target.value))
       checked.splice(index, 1)
     }
-    console.log('checked', checked)
+    // console.log('checked', checked)
     this.setState({ expensesToReport: checked })
   }
   handleGenerateReport = (e) => {
     e.preventDefault()
     this.postExpensesToGenerateReport("/generate-report", this.state.expensesToReport)
+  }
+  handleCheckboxesToMarkAsPaid = (e) => {
+    const checked = this.state.expensesPaid
+    let index
+
+    if (e.target.checked) {
+      checked.push(parseInt(e.target.value))
+    } else {
+      index = checked.indexOf(parseInt(e.target.value))
+      checked.splice(index, 1)
+    }
+    // console.log('checked', checked)
+    this.setState({ expensesPaid: checked })
+  }
+  handleMarkAsPaid = (e) => {
+    e.preventDefault()
+    this.postExpensesAsPaid("/mark-as-paid", this.state.expensesPaid)
   }
   deleteExpense = (expenseId, index) => {
     // console.log('clicked delete expense id ' + expenseId + ' index ' + index)
@@ -78,19 +108,31 @@ class ExpenseTable extends React.Component {
     this.setState({ expenses: updatedState })
   }
   renderTable(expenses, status) {
+    let checkboxName = "expenseToReport"
+    let onChangeFunction = this.handleCheckboxesToReport
+    let checkboxDisplayStyle = {display: "block"}
     let statusSortedExpenses = expenses.reduce((result, expense) => {
       if (expense.status === status) {
         result.push(expense)
       }
       return result
     }, [])
+    if (status === "Pending") {
+      checkboxName = "expenseToMarkAsPaid"
+      onChangeFunction = this.handleCheckboxesToMarkAsPaid
+    }
+    if (status === "Paid") {
+      checkboxDisplayStyle = {display: "none"}
+      checkboxName = ""
+      onChangeFunction = null
+    }
     return (
       <tbody>
         {statusSortedExpenses.map((expense, index) => (
           <tr key={index}>
           <td>
             {expense.bucket_name}
-            <input type="checkbox" name="reportedExpense" value={expense.id} onChange={this.handleCheckboxesToReport}></input>
+            <input type="checkbox" style={checkboxDisplayStyle} name={checkboxName} value={expense.id} onChange={onChangeFunction}></input>
           </td>
           <td>
             {expense.expense_date}<br/>
@@ -109,9 +151,9 @@ class ExpenseTable extends React.Component {
                   <Dropdown.Item>
                     <ReceiptModal/>
                   </Dropdown.Item>
-                  <Dropdown.Item>
+                  {/* <Dropdown.Item>
                     Edit
-                  </Dropdown.Item>
+                  </Dropdown.Item> */}
                   <Dropdown.Item onClick={() => (this.deleteExpense(expense.id, index))}>
                     Delete
                   </Dropdown.Item>
@@ -133,7 +175,7 @@ class ExpenseTable extends React.Component {
         <form onSubmit={this.handleGenerateReport}>
           <div className="table-header">
             <h3>Not Submitted</h3>
-            <Button type="submit" className="generate-report-btn">Generate Report</Button>
+            <Button type="submit">Generate Report</Button>
           </div>
           <Table
             bordered
@@ -151,7 +193,30 @@ class ExpenseTable extends React.Component {
               {this.renderTable(this.state.expenses, "Not submitted")}
           </Table>
         </form>
-        <h3>Pending</h3>
+        <form onSubmit={this.handleMarkAsPaid}>
+          <div className="table-header">
+            <h3>Pending</h3>
+            <Button type="submit">Mark As Paid</Button>
+          </div>
+          <Table
+            bordered
+            hover
+            size="sm"
+          >
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+              {this.renderTable(this.state.expenses, "Pending")}
+          </Table>
+        </form>
+        <div className="table-header">
+          <h3>Paid</h3>
+        </div>
         <Table
           bordered
           hover
@@ -162,23 +227,7 @@ class ExpenseTable extends React.Component {
               <th>Category</th>
               <th>Description</th>
               <th>Amount</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-            {this.renderTable(this.state.expenses, "Pending")}
-        </Table>
-        <h3>Paid</h3>
-        <Table
-          bordered
-          hover
-          size="sm"
-        >
-          <thead>
-            <tr>
-              <th>Category</th>
-              <th>Description</th>
-              <th>Amount</th>
-              <th>Date</th>
+              <th>Actions</th>
             </tr>
           </thead>
             {this.renderTable(this.state.expenses, "Paid")}
