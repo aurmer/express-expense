@@ -4,16 +4,29 @@ body{
 
 /* Nav Bar CSS */
 
-nav{
-  height: auto;
-}
-
-#login-nav {
-  content: url(./images/logoLong.png);
-}
-
 h3 {
   margin: 0 auto
+}
+/* Login Logo CSS */
+
+#login-stacked-logo {
+  display: none !important
+}
+#login-long-logo {
+  display: block !important;
+  margin: 60px auto;
+  width: 90vw
+}
+@media (max-width: 767px) {
+  #login-stacked-logo {
+    display: block !important;
+    margin: 40px auto;
+    width: 80vw
+
+  }
+  #login-long-logo {
+    display: none !important
+  }
 }
 
 /* Login Button CSS */
@@ -64,26 +77,4 @@ h3 {
     color: white;
     font-weight: bold;
     text-align: center;
-  }
-  .login-card-element {
-    position: absolute;
-    width: 350;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-
-  @media screen and (max-width: 960px) {
-    #login-nav {
-      content: url(./images/logoStacked.png);
-    }
-
-    .login-card-element {
-      position: absolute;
-      width: 300;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-
   }
