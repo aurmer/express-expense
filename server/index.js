@@ -11,6 +11,7 @@ APP.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3000;
 const { db } = require('./db/dbConnection');
 const mustache = require('mustache')
+const {renderExpenseImages, renderExpenseTable} = require('./rendering/reportRender')
 
 const passport = require('passport'),
 	FacebookStrategy = require('passport-facebook').Strategy,
@@ -23,6 +24,11 @@ const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
 const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
 const SESSION_SECRET = process.env.SESSION_SECRET;
 const { findOrCreate } = require('./db/queryFunctions/userQuery');
+
+const reportPage = fs.readFileSync(
+    './mustacheTemplates/report.mustache',
+  	"utf8"
+)
 
 passport.use(
 	new GoogleStrategy(
@@ -97,7 +103,7 @@ function ensureAuth(req, res, next) {
 	}
 }
 
-// Test DB Connections //
+// DB Connections //
 
 function getUser(userId) {
 	return db('users').where({ 'users.id': userId });
@@ -171,7 +177,7 @@ function deleteExpense(expenseId) {
 
 APP.get('*', (req, res, next) => {
 
-	// console.log("NEW REQUEST:\n",req.originalUrl);
+	console.log("NEW REQUEST:\n",req.originalUrl);
 	next();
 });
 
@@ -192,6 +198,23 @@ APP.use('/404', ensureAuth, express.static('public/app'))
 
 
 // DATABASE API ROUTES
+
+
+
+APP.get('/report', ensureAuth, (req, res) => {
+	getExpenses(req.user)
+	.then(reportExpenses => {
+		res.send(
+			mustache.render(reportPage, {
+				generatedReport: renderExpenseTable(reportExpenses),
+			})
+		)
+	})
+	.catch(function(err) {
+		console.log(err);
+		res.send('Report not found');
+	});
+})
 
 APP.get('/get-user', ensureAuth, (req, res, next) => {
 	getUser(req.user).then(response => {
@@ -239,26 +262,6 @@ APP.post('/delete-expense', ensureAuth, (req, res) => {
 	deleteExpense(req.body.id);
 	res.send(console.log('done'));
 });
-
-//Mustache Template Routes//
-
-const reportPage = fs.readFileSync(
-    './mustacheTemplates/report.mustache',
-  	"utf8"
-)
-
-APP.get('/report/:slug'), (req, res) => {
-	getExpenses(req.body)
-	.then((reportExpenses)=>{
-		res.send(
-			mustache.render(reportPage, {
-				generatedReport: renderExpenseTable(reportExpenses),
-				renderExpenseImages: renderExpenseImages(reportExpenses)
-			})
-		)
-	})
-	
-}
 
 //Authentication Routes//
 
@@ -310,10 +313,10 @@ APP.get('/logout', function(req, res) {
 
 APP.get('/error', (req, res) => res.send('error logging in'));
 
-APP.use(function (req, res, next) {
-	res.status(404)
-	console.log(req.originalUrl)
-	res.redirect('/404/')
-  })
+// APP.use(function (req, res, next) {
+// 	res.status(404)
+// 	console.log(req.originalUrl)
+// 	res.redirect('/404/')
+//   })
 
 APP.listen(PORT, () => console.log(`Expense APP listening on port ${PORT}!`));
