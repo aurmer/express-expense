@@ -94,7 +94,7 @@ function ensureAuth(req, res, next) {
 		console.log('user id: ', req.user);
 		next();
 	} else {
-		res.redirect('/login');
+		res.redirect('/login/');
 	}
 }
 
@@ -163,9 +163,15 @@ APP.get('*', (req, res, next) => {
 	next();
 });
 
+<<<<<<< HEAD
 APP.get('/', ensureAuth, (req, res, next) => {
 	res.redirect('/new-expense');
 });
+=======
+APP.get('/', ensureAuth, (req,res,next) => {
+	res.redirect('/new-expense/')
+})
+>>>>>>> master
 
 APP.use('/login', express.static('public/login'));
 APP.use('/privacy', express.static('public/privacy'));
@@ -234,7 +240,7 @@ APP.get(
 	'/auth/google/callback',
 	passport.authenticate('google', { failureRedirect: '/' }),
 	function(req, res) {
-		res.redirect('/new-expense');
+		res.redirect('/new-expense/');
 	}
 );
 
@@ -253,23 +259,31 @@ APP.get(
 		failureRedirect: '/login',
 	}),
 	function(req, res) {
-		res.redirect('/new-expense');
+		res.redirect('/new-expense/');
 	}
 );
 
 APP.get('/logout', function(req, res) {
 	console.log(req.session);
 	req.session.destroy(function(err) {
-		res.redirect('/login');
+		res.redirect('/login/');
 	});
 });
 
 APP.get('/error', (req, res) => res.send('error logging in'));
 
+<<<<<<< HEAD
 APP.use(function(req, res, next) {
 	res.status(404);
 	// console.log(req.originalUrl);
 	res.redirect('/404');
 });
+=======
+APP.use(function (req, res, next) {
+	res.status(404)
+	console.log(req.originalUrl)
+	res.redirect('/404/')
+  })
+>>>>>>> master
 
 APP.listen(PORT, () => console.log(`Expense APP listening on port ${PORT}!`));
