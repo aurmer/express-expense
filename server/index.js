@@ -11,20 +11,17 @@ APP.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3000;
 const { db } = require('./db/dbConnection');
 const mustache = require('mustache')
+
 const passport = require('passport'),
 	FacebookStrategy = require('passport-facebook').Strategy,
 	GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 const DOMAIN = process.env.DOMAIN;
-
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-
 const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
 const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
-
 const SESSION_SECRET = process.env.SESSION_SECRET;
-
 const { findOrCreate } = require('./db/queryFunctions/userQuery');
 
 passport.use(
@@ -121,7 +118,7 @@ function getCategories(userId) {
 	});
 }
 function moveExpenseToPending(expenseIdArray) {
-	// console.log(expenseIdArray)
+
 	expenseIdArray.forEach(expenseId => {
 		db('expense_item')
 			.where({ id: expenseId })
@@ -141,7 +138,6 @@ function markExpenseAsPaid(expenseIdArray) {
 function postNewCategory(userId, category) {
 	return (
 		db('buckets_categories')
-			// .where({ 'buckets_categories.user_id': userId })
 			.insert([
 				{
 					user_id: userId,
@@ -189,6 +185,7 @@ APP.use('/app', ensureAuth, express.static('public/app'));
 APP.use('/new-expense', ensureAuth, express.static('public/app'));
 APP.use('/about', ensureAuth, express.static('public/app'))
 APP.use('/dashboard', ensureAuth, express.static('public/app'))
+APP.use('/generate-report', ensureAuth, express.static('public/app'))
 APP.use('/404', ensureAuth, express.static('public/app'))
 
 
@@ -226,9 +223,10 @@ APP.post('/add-expense', ensureAuth, (req, res) => {
 	console.log('new expense for user: ', req.user);
 	postNewExpense(req.user, req.body).then(res.send(console.log('success')));
 });
-APP.get('/generate-report', ensureAuth, (req, res) => {
+APP.post('/generate-report', ensureAuth, (req, res) => {
 	console.log('new report request for user: ', req.user);
 	moveExpenseToPending(req.body);
+
 	res.send(console.log('generate-report post done'));
 });
 APP.post('/mark-as-paid', ensureAuth, (req, res) => {
@@ -250,8 +248,16 @@ const reportPage = fs.readFileSync(
 )
 
 APP.get('/report/:slug'), (req, res) => {
-
-
+	getExpenses(req.body)
+	.then((reportExpenses)=>{
+		res.send(
+			mustache.render(reportPage, {
+				generatedReport: renderExpenseTable(reportExpenses),
+				renderExpenseImages: renderExpenseImages(reportExpenses)
+			})
+		)
+	})
+	
 }
 
 //Authentication Routes//
