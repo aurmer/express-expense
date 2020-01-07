@@ -52,7 +52,7 @@ class ExpenseTable extends React.Component {
   }
   handleGenerateReport = (e) => {
     e.preventDefault()
-    this.postExpensesToGenerateReport(("generate-report"), this.state.expensesToReport)
+    this.postExpensesToGenerateReport("/generate-report", this.state.expensesToReport)
   }
   renderTable(expenses, status) {
     let statusSortedExpenses = expenses.reduce((result, expense) => {
