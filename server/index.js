@@ -120,6 +120,54 @@ function getCategories(userId) {
 		'buckets_categories.user_id': userId,
 	});
 }
+/*
+function queryExpensesForReport(expenseId) {
+	console.log('query expenseId: ', expenseId)
+	return db('expense_item')
+		.where({ 'expense_item.id': expenseId })
+		.then(data => {
+			console.log('sql data', data)
+			return data
+		})
+}
+
+APP.get('/test-report-route', (req, res) => {
+	console.log(req.body)
+	let expensesForReport = []
+	let expensePromises = []
+	req.body.forEach(expenseId => {
+		console.log('expenseId: ', expenseId)
+		expensePromises.push(new Promise((resolve, reject) => {
+			queryExpensesForReport(expenseId)
+			// .then(reportedExpense => {
+			// 	console.log('reportedExpense', reportedExpense[0])
+			// 	expensesForReport.push(reportedExpense[0])
+			// 	})
+			// .then(res.send(console.log('final array: ', expensesForReport)))
+		}))
+	})
+	Promise.all(expensePromises)
+		.then(arrayOfPromiseData => {
+			res.send
+		})
+})
+	*/
+APP.get('/test-report-route', (req, res) => {
+	console.log(req.body.user)
+	console.log(req.body.id)
+	let expensesToReport = []
+	getExpenses(req.body.user).then(expenses => {
+		JSON.parse(req.body.id).map(id => {
+			expenses.forEach(expense => {
+				if (expense.id === id) {
+					expensesToReport.push(expense)
+				}
+			});
+		})
+		res.send(console.log('expenses to report: ', expensesToReport));
+	});
+
+});
 function moveExpenseToPending(expenseIdArray) {
 	// console.log(expenseIdArray)
 	expenseIdArray.forEach(expenseId => {
@@ -226,8 +274,9 @@ APP.post('/add-expense', ensureAuth, (req, res) => {
 	console.log('new expense for user: ', req.user);
 	postNewExpense(req.user, req.body).then(res.send(console.log('success')));
 });
-APP.get('/generate-report', ensureAuth, (req, res) => {
+APP.post('/generate-report', ensureAuth, (req, res) => {
 	console.log('new report request for user: ', req.user);
+	console.log(req.body)
 	moveExpenseToPending(req.body);
 	res.send(console.log('generate-report post done'));
 });
@@ -306,7 +355,7 @@ APP.get('/error', (req, res) => res.send('error logging in'));
 
 APP.use(function (req, res, next) {
 	res.status(404)
-	console.log(req.originalUrl)
+	console.log('clicked route: ', req.originalUrl)
 	res.redirect('/404/')
   })
 
