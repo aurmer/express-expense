@@ -1,5 +1,5 @@
 require('dotenv').config();
-const fs = require("fs");
+const fs = require('fs');
 const express = require('express');
 const session = require('express-session');
 var cors = require('cors');
@@ -10,8 +10,11 @@ APP.use(express.json());
 APP.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3000;
 const { db } = require('./db/dbConnection');
-const mustache = require('mustache')
-const {renderExpenseImages, renderExpenseTable} = require('./rendering/reportRender')
+const mustache = require('mustache');
+const {
+	renderExpenseImages,
+	renderExpenseTable,
+} = require('./rendering/reportRender');
 
 const passport = require('passport'),
 	FacebookStrategy = require('passport-facebook').Strategy,
@@ -26,9 +29,9 @@ const SESSION_SECRET = process.env.SESSION_SECRET;
 const { findOrCreate } = require('./db/queryFunctions/userQuery');
 
 const reportPage = fs.readFileSync(
-    './mustacheTemplates/report.mustache',
-  	"utf8"
-)
+	'./mustacheTemplates/report.mustache',
+	'utf8'
+);
 
 passport.use(
 	new GoogleStrategy(
@@ -124,23 +127,21 @@ function getCategories(userId) {
 	});
 }
 APP.get('/test-report-route', (req, res) => {
-	console.log(req.body.user)
-	console.log(req.body.id)
-	let expensesToReport = []
+	console.log(req.body.user);
+	console.log(req.body.id);
+	let expensesToReport = [];
 	getExpenses(req.body.user).then(expenses => {
 		JSON.parse(req.body.id).map(id => {
 			expenses.forEach(expense => {
 				if (expense.id === id) {
-					expensesToReport.push(expense)
+					expensesToReport.push(expense);
 				}
 			});
-		})
+		});
 		res.send(console.log('expenses to report: ', expensesToReport));
-});
-
+	});
 });
 function moveExpenseToPending(expenseIdArray) {
-
 	expenseIdArray.forEach(expenseId => {
 		db('expense_item')
 			.where({ id: expenseId })
@@ -154,19 +155,16 @@ function markExpenseAsPaid(expenseIdArray) {
 		db('expense_item')
 			.where({ id: expenseId })
 			.update({ status: 'Paid' })
-			.then(console.log('expenseId ' + expenseId + ' status set to Paid'))
-	})
+			.then(console.log('expenseId ' + expenseId + ' status set to Paid'));
+	});
 }
 function postNewCategory(userId, category) {
-	return (
-		db('buckets_categories')
-			.insert([
-				{
-					user_id: userId,
-					bucket_name: category.bucket_name,
-				},
-			])
-	);
+	return db('buckets_categories').insert([
+		{
+			user_id: userId,
+			bucket_name: category.bucket_name,
+		},
+	]);
 }
 function postNewExpense(userId, expense) {
 	return db('expense_item')
@@ -179,7 +177,7 @@ function postNewExpense(userId, expense) {
 				status: 'Not submitted',
 				bucket_id: expense.bucket_id,
 				user_id: userId,
-				receipt_img_path: expense.receipt_img_path
+				receipt_img_path: expense.receipt_img_path,
 			},
 		]);
 }
@@ -187,51 +185,52 @@ function deleteExpense(expenseId) {
 	return db('expense_item')
 		.where({ 'expense_item.id': expenseId })
 		.del()
-		.then(console.log('expense id ' + expenseId + ' deleted'))
+		.then(console.log('expense id ' + expenseId + ' deleted'));
 }
 
 // SERVER API ROUTES
 
 APP.get('*', (req, res, next) => {
-
-	console.log("NEW REQUEST:\n",req.originalUrl);
+	console.log('NEW REQUEST:\n', req.originalUrl);
 	next();
 });
 
-APP.get('/', ensureAuth, (req,res,next) => {
+APP.get('/', ensureAuth, (req, res, next) => {
 	res.redirect('/new-expense/');
-})
+});
 
 APP.use('/login', express.static('public/login'));
 APP.use('/privacy', express.static('public/privacy'));
 APP.use('/app', ensureAuth, express.static('public/app'));
 APP.use('/new-expense', ensureAuth, express.static('public/app'));
-APP.use('/about', ensureAuth, express.static('public/app'))
-APP.use('/dashboard', ensureAuth, express.static('public/app'))
-APP.use('/generate-report', ensureAuth, express.static('public/app'))
-APP.use('/404', ensureAuth, express.static('public/app'))
-
-
-
+APP.use('/about', ensureAuth, express.static('public/app'));
+APP.use('/dashboard', ensureAuth, express.static('public/app'));
+APP.use('/generate-report', ensureAuth, express.static('public/app'));
+APP.use('/404', ensureAuth, express.static('public/app'));
 
 // DATABASE API ROUTES
 
-
-
 APP.get('/report', ensureAuth, (req, res) => {
-	getExpenses(req.user)
-	.then(reportExpenses => {
-		res.send(
-			mustache.render(reportPage, {
-				generatedReport: renderExpenseTable(reportExpenses),
+	let expensesToReport = [];
+	var testArray = [8,9]
+	getExpenses(req.user).then(expenses => {
+		testArray
+			.map(id => {
+				expenses.forEach(expense => {
+					if (expense.id === id) {
+						expensesToReport.push(expense);
+					}
+				});
 			})
-		)
-	})
-	.catch(function(err) {
-		console.log(err);
-		res.send('Report not found');
+
+			res.send(
+				mustache.render(reportPage, {
+					generatedReport: renderExpenseTable(expensesToReport),
+				})
+			);
+		})
+		
 	});
-})
 
 APP.get('/get-user', ensureAuth, (req, res, next) => {
 	getUser(req.user).then(response => {
@@ -265,16 +264,17 @@ APP.post('/add-expense', ensureAuth, (req, res) => {
 });
 APP.post('/generate-report', ensureAuth, (req, res) => {
 	console.log('new report request for user: ', req.user);
-	console.log(req.body)
+	console.log(req.body);
 	moveExpenseToPending(req.body);
 
 	res.send(console.log('generate-report post done'));
 });
 APP.post('/mark-as-paid', ensureAuth, (req, res) => {
-	console.log('user ' + req.user + ' marking expenses ' + req.body) + ' as paid';
+	console.log('user ' + req.user + ' marking expenses ' + req.body) +
+		' as paid';
 	markExpenseAsPaid(req.body);
-	res.send(console.log('mark-as-paid done'))
-})
+	res.send(console.log('mark-as-paid done'));
+});
 APP.post('/delete-expense', ensureAuth, (req, res) => {
 	console.log('new request to delete expense id', req.body.id);
 	deleteExpense(req.body.id);
@@ -331,12 +331,10 @@ APP.get('/logout', function(req, res) {
 
 APP.get('/error', (req, res) => res.send('error logging in'));
 
-
-APP.use(function (req, res, next) {
-	res.status(404)
-	console.log('clicked route: ', req.originalUrl)
-	res.redirect('/404/')
-  })
-
+APP.use(function(req, res, next) {
+	res.status(404);
+	console.log('clicked route: ', req.originalUrl);
+	res.redirect('/404/');
+});
 
 APP.listen(PORT, () => console.log(`Expense APP listening on port ${PORT}!`));

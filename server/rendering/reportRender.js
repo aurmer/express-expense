@@ -53,5 +53,4 @@ function renderExpenseImages(expense) {
 
 module.exports = {
 	renderExpenseTable: renderExpenseTable,
-	renderExpenseImages: renderExpenseImages,
 };
