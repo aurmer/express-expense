@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { receiptLoaded } from '../redux/actions'
+import { oneDepthObjectEqual } from '../util-functions'
 
 import ReceiptUpload from './ReceiptUpload'
 
@@ -57,26 +58,27 @@ class NewExpenseForm extends React.Component {
     }))
   }
 
-  shouldUpdateCatagories(data) {
+  shouldUpdateCategories(data) {
     console.log("~~data~~\n",data)
-      console.log("~~catagories~~\n",this.state.catagories)
-    if(data === this.state.catagories) {
+      console.log("~~catagories~~\n",this.state.categories)
+    if(oneDepthObjectEqual(data,this.state.categories)) {
       return false
     } else {
       return true
     }
   }
 
-  fetchCategories() {
+  fetchCategories = () => {
     fetch("/get-categories")
     .then(response => response.json())
     .then(data => {
-        if(this.shouldUpdateCatagories(data))
+        if(this.shouldUpdateCategories(data))
         {
           this.setState({ categories: data})
         }
     })
   }
+
   renderCategories(categories) {
     return (
       <>
@@ -125,7 +127,7 @@ class NewExpenseForm extends React.Component {
               </select>
             </div>
             <div className="add-category-btn-container">
-              <NewCategoryModal/>
+              <NewCategoryModal fetchCategories={this.fetchCategories}/>
             </div>
           </div>
           <Button

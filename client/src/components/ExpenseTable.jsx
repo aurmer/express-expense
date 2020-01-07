@@ -22,7 +22,7 @@ class ExpenseTable extends React.Component {
   deepCopy (oldObject) {
     return JSON.parse(JSON.stringify(oldObject))
   }
-  fetchExpenses() {
+  fetchExpenses = () => {
     fetch("/get-expenses")
       .then(response => response.json())
       .then(data => {
@@ -81,6 +81,7 @@ class ExpenseTable extends React.Component {
   handleGenerateReport = (e) => {
     e.preventDefault()
     this.postExpensesToGenerateReport("/generate-report", this.state.expensesToReport)
+    .then(this.fetchExpenses)
   }
   handleCheckboxesToMarkAsPaid = (e) => {
     const checked = this.state.expensesPaid
@@ -98,6 +99,7 @@ class ExpenseTable extends React.Component {
   handleMarkAsPaid = (e) => {
     e.preventDefault()
     this.postExpensesAsPaid("/mark-as-paid", this.state.expensesPaid)
+    .then(this.fetchExpenses)
   }
   deleteExpense = (expenseId, index) => {
     // console.log('clicked delete expense id ' + expenseId + ' index ' + index)
