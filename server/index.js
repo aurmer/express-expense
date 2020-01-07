@@ -120,38 +120,6 @@ function getCategories(userId) {
 		'buckets_categories.user_id': userId,
 	});
 }
-/*
-function queryExpensesForReport(expenseId) {
-	console.log('query expenseId: ', expenseId)
-	return db('expense_item')
-		.where({ 'expense_item.id': expenseId })
-		.then(data => {
-			console.log('sql data', data)
-			return data
-		})
-}
-
-APP.get('/test-report-route', (req, res) => {
-	console.log(req.body)
-	let expensesForReport = []
-	let expensePromises = []
-	req.body.forEach(expenseId => {
-		console.log('expenseId: ', expenseId)
-		expensePromises.push(new Promise((resolve, reject) => {
-			queryExpensesForReport(expenseId)
-			// .then(reportedExpense => {
-			// 	console.log('reportedExpense', reportedExpense[0])
-			// 	expensesForReport.push(reportedExpense[0])
-			// 	})
-			// .then(res.send(console.log('final array: ', expensesForReport)))
-		}))
-	})
-	Promise.all(expensePromises)
-		.then(arrayOfPromiseData => {
-			res.send
-		})
-})
-	*/
 APP.get('/test-report-route', (req, res) => {
 	console.log(req.body.user)
 	console.log(req.body.id)
@@ -165,7 +133,7 @@ APP.get('/test-report-route', (req, res) => {
 			});
 		})
 		res.send(console.log('expenses to report: ', expensesToReport));
-	});
+});
 
 });
 function moveExpenseToPending(expenseIdArray) {
