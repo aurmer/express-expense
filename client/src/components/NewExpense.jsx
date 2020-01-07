@@ -40,7 +40,7 @@ class NewExpenseForm extends React.Component {
   }
   handleSubmit = (e) => {
     e.preventDefault()
-    this.postNewExpense(("add-expense"),
+    this.postNewExpense(("/add-expense"),
       ({
         receipt_name: this.state.newExpense.description,
         amount: parseFloat(this.state.newExpense.amount),

@@ -154,6 +154,12 @@ function postNewExpense(userId, expense) {
 			},
 		]);
 }
+function deleteExpense(expenseId) {
+	return db('expense_item')
+		.where({ 'expense_item.id': expenseId })
+		.del()
+		.then(console.log('expense id ' + expenseId + ' deleted'))
+}
 
 // SERVER API ROUTES
 
@@ -214,6 +220,11 @@ APP.post('/generate-report', ensureAuth, (req, res) => {
 	console.log('new report request for user: ', req.user);
 	moveExpenseToPending(req.body);
 	res.send(console.log('generate-report post done'));
+});
+APP.post('/delete-expense', ensureAuth, (req, res) => {
+	console.log('new request to delete expense id', req.body.id);
+	deleteExpense(req.body.id);
+	res.send(console.log('done'));
 });
 
 //Authentication Routes//
