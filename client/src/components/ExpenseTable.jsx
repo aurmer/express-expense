@@ -18,6 +18,9 @@ class ExpenseTable extends React.Component {
         expensesToReport: []
     };
   }
+  deepCopy (oldObject) {
+    return JSON.parse(JSON.stringify(oldObject))
+  }
   fetchExpenses() {
     fetch("/get-expenses")
       .then(response => response.json())
@@ -26,6 +29,18 @@ class ExpenseTable extends React.Component {
       })
   }
   async postExpensesToGenerateReport(url = '', data) {
+    const response = await fetch(url, {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    return response
+  }
+    async postDeleteExpense(url = '', data = {}) {
     const response = await fetch(url, {
       method: 'POST',
       mode: 'cors',
@@ -53,6 +68,14 @@ class ExpenseTable extends React.Component {
   handleGenerateReport = (e) => {
     e.preventDefault()
     this.postExpensesToGenerateReport("/generate-report", this.state.expensesToReport)
+  }
+  deleteExpense = (expenseId, index) => {
+    // console.log('clicked delete expense id ' + expenseId + ' index ' + index)
+    this.postDeleteExpense("/delete-expense", {id: expenseId})
+    // console.log('expenses state ', this.state.expenses)
+    let initialState = this.deepCopy(this.state.expenses)
+    let updatedState = initialState.splice(index, 1)
+    this.setState({ expenses: updatedState })
   }
   renderTable(expenses, status) {
     let statusSortedExpenses = expenses.reduce((result, expense) => {
@@ -88,6 +111,9 @@ class ExpenseTable extends React.Component {
                   </Dropdown.Item>
                   <Dropdown.Item>
                     Edit
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => (this.deleteExpense(expense.id, index))}>
+                    Delete
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown.Toggle>
