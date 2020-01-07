@@ -7,6 +7,7 @@ exports.up = function(knex) {
 		table.string('expense_date');
 		table.string('status');
 		table.string('tags');
+		table.string('receipt_img_path');
 		table.timestamps(true, true);
 	});
 };

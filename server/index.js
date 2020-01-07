@@ -1,4 +1,5 @@
 require('dotenv').config();
+const fs = require("fs");
 const express = require('express');
 const session = require('express-session');
 var cors = require('cors');
@@ -9,6 +10,7 @@ APP.use(express.json());
 APP.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3000;
 const { db } = require('./db/dbConnection');
+const mustache = require('mustache')
 const passport = require('passport'),
 	FacebookStrategy = require('passport-facebook').Strategy,
 	GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
@@ -239,6 +241,17 @@ APP.post('/delete-expense', ensureAuth, (req, res) => {
 	deleteExpense(req.body.id);
 	res.send(console.log('done'));
 });
+
+//Mustache Template Routes//
+
+const reportPage = fs.readFileSync(
+    './mustacheTemplates/report.mustache',
+  	"utf8"
+)
+
+APP.get('/report/:slug'), (req, res) => {
+
+}
 
 //Authentication Routes//
 
