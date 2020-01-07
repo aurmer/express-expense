@@ -3,6 +3,7 @@ exports.up = function(knex) {
 		table.integer('bucket_id').unsigned();
 		table.foreign('bucket_id').references('buckets_categories.id');
 		table.integer('user_id').unsigned();
+		table.string('receipt_img_path');
 		table.foreign('user_id').references('users.id');
 	});
 };
