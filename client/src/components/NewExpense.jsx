@@ -28,6 +28,9 @@ class NewExpenseForm extends React.Component {
     }))
   }
   async postNewExpense(url = '', data) {
+    const { imgFile, ...textFields } = data
+    const new_img_filename = `${textFields.expense_date} ${textFields.user_id}.${imgFile.name.split('.').pop()}`
+    textFields.receipt_img_path = `public/uploaded-content/uploaded-receipts/${new_img_filename}`
     const response = await fetch(url, {
       method: 'POST',
       mode: 'cors',
@@ -35,8 +38,17 @@ class NewExpenseForm extends React.Component {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(data)
-    });
+      body: JSON.stringify(textFields)
+    })
+    const img_response = await fetch('/upload-img', { // Your POST endpoint
+        method: 'POST',
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
+        body: imgFile // This is your file object
+      })
     return response
   }
   handleSubmit = (e) => {
@@ -46,16 +58,19 @@ class NewExpenseForm extends React.Component {
         receipt_name: this.state.newExpense.description,
         amount: parseFloat(this.state.newExpense.amount),
         expense_date: this.state.newExpense.date,
-        bucket_id: parseInt(this.state.newExpense.category)
+        bucket_id: parseInt(this.state.newExpense.category),
+        imgFile: e.target.elements[0].files[0]
       }))
     this.setState(prevState => ({
       newExpense: {
         description: '',
         amount: '',
         date: '',
-        category: ''
+        category: '',
+        img: '',
       }
     }))
+    window.location.href='/dashboard'
   }
 
   shouldUpdateCategories(data) {
@@ -98,13 +113,15 @@ class NewExpenseForm extends React.Component {
     this.fetchCategories()
   }
 
+
+
   render() {
 
     return (
       <div>
-        <form id="newExpenseForm" onSubmit={this.handleSubmit} className="go-bottom">
+        <form id="newExpenseForm" action="/add-expense" onSubmit={this.handleSubmit} className="go-bottom">
           <div className="form-input-container">
-            <ReceiptUpload />
+            <ReceiptUpload hackForce={Math.random()} />
           </div>
           <div className="form-input-container">
             <input onChange={this.handleChange} id="description" name="description" type="text" value={this.state.newExpense.description} required/>

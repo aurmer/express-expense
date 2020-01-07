@@ -159,6 +159,7 @@ function postNewExpense(userId, expense) {
 				status: 'Not submitted',
 				bucket_id: expense.bucket_id,
 				user_id: userId,
+				receipt_img_path: expense.receipt_img_path
 			},
 		]);
 }
