@@ -11,21 +11,24 @@ APP.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3000;
 const { db } = require('./db/dbConnection');
 const mustache = require('mustache')
+const {renderExpenseImages, renderExpenseTable} = require('./rendering/reportRender')
+
 const passport = require('passport'),
 	FacebookStrategy = require('passport-facebook').Strategy,
 	GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 const DOMAIN = process.env.DOMAIN;
-
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-
 const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
 const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
-
 const SESSION_SECRET = process.env.SESSION_SECRET;
-
 const { findOrCreate } = require('./db/queryFunctions/userQuery');
+
+const reportPage = fs.readFileSync(
+    './mustacheTemplates/report.mustache',
+  	"utf8"
+)
 
 passport.use(
 	new GoogleStrategy(
@@ -100,7 +103,7 @@ function ensureAuth(req, res, next) {
 	}
 }
 
-// Test DB Connections //
+// DB Connections //
 
 function getUser(userId) {
 	return db('users').where({ 'users.id': userId });
@@ -121,7 +124,7 @@ function getCategories(userId) {
 	});
 }
 function moveExpenseToPending(expenseIdArray) {
-	// console.log(expenseIdArray)
+
 	expenseIdArray.forEach(expenseId => {
 		db('expense_item')
 			.where({ id: expenseId })
@@ -141,7 +144,6 @@ function markExpenseAsPaid(expenseIdArray) {
 function postNewCategory(userId, category) {
 	return (
 		db('buckets_categories')
-			// .where({ 'buckets_categories.user_id': userId })
 			.insert([
 				{
 					user_id: userId,
@@ -176,7 +178,7 @@ function deleteExpense(expenseId) {
 
 APP.get('*', (req, res, next) => {
 
-	// console.log("NEW REQUEST:\n",req.originalUrl);
+	console.log("NEW REQUEST:\n",req.originalUrl);
 	next();
 });
 
@@ -190,12 +192,30 @@ APP.use('/app', ensureAuth, express.static('public/app'));
 APP.use('/new-expense', ensureAuth, express.static('public/app'));
 APP.use('/about', ensureAuth, express.static('public/app'))
 APP.use('/dashboard', ensureAuth, express.static('public/app'))
+APP.use('/generate-report', ensureAuth, express.static('public/app'))
 APP.use('/404', ensureAuth, express.static('public/app'))
 
 
 
 
 // DATABASE API ROUTES
+
+
+
+APP.get('/report', ensureAuth, (req, res) => {
+	getExpenses(req.user)
+	.then(reportExpenses => {
+		res.send(
+			mustache.render(reportPage, {
+				generatedReport: renderExpenseTable(reportExpenses),
+			})
+		)
+	})
+	.catch(function(err) {
+		console.log(err);
+		res.send('Report not found');
+	});
+})
 
 APP.get('/get-user', ensureAuth, (req, res, next) => {
 	getUser(req.user).then(response => {
@@ -230,6 +250,7 @@ APP.post('/add-expense', ensureAuth, (req, res) => {
 APP.post('/generate-report', ensureAuth, (req, res) => {
 	console.log('new report request for user: ', req.user);
 	moveExpenseToPending(req.body);
+
 	res.send(console.log('generate-report post done'));
 });
 APP.post('/mark-as-paid', ensureAuth, (req, res) => {
@@ -242,18 +263,6 @@ APP.post('/delete-expense', ensureAuth, (req, res) => {
 	deleteExpense(req.body.id);
 	res.send(console.log('done'));
 });
-
-//Mustache Template Routes//
-
-const reportPage = fs.readFileSync(
-    './mustacheTemplates/report.mustache',
-  	"utf8"
-)
-
-APP.get('/report/:slug'), (req, res) => {
-
-
-}
 
 //Authentication Routes//
 
@@ -305,10 +314,10 @@ APP.get('/logout', function(req, res) {
 
 APP.get('/error', (req, res) => res.send('error logging in'));
 
-APP.use(function (req, res, next) {
-	res.status(404)
-	console.log(req.originalUrl)
-	res.redirect('/404/')
-  })
+// APP.use(function (req, res, next) {
+// 	res.status(404)
+// 	console.log(req.originalUrl)
+// 	res.redirect('/404/')
+//   })
 
 APP.listen(PORT, () => console.log(`Expense APP listening on port ${PORT}!`));
