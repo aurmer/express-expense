@@ -39,6 +39,7 @@ class ExpenseTable extends React.Component {
       },
       body: JSON.stringify(data)
     });
+    console.log(response)
     return response
   }
   async postExpensesAsPaid(url = '', data) {
