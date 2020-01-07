@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 const AspectRatioBox = (props) => {
 
-  const {width, heightPercent, ...propsExlcudingWidth} = props
+  const {width, heightPercent, show, ...propsExlcudingWidth} = props
 
   const OUTER_STYLES = {
     height: '0',
@@ -20,8 +20,17 @@ const AspectRatioBox = (props) => {
     height: '100%'
   }
 
+  const TOP_STYLES = show ? {
+    width,
+    margin:"auto"
+  } : {
+    width,
+    margin:"auto",
+    display:"none"
+  }
+
   return (
-    <div style={{width,margin:"auto"}}>
+    <div style={TOP_STYLES}>
       <div {...propsExlcudingWidth} style={OUTER_STYLES}>
         <div style={INNER_STYLES}>
           {props.children}
