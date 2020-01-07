@@ -6,6 +6,7 @@ import AppNavbar from './components/AppNavbar'
 import NewExpense from './components/NewExpense'
 import Dashboard from './components/Dashboard'
 import PageNotFound from './components/PageNotFound'
+import About from './components/About'
 
 require('dotenv').config();
 
@@ -23,7 +24,7 @@ function App() {
               <Dashboard/>
             </Route>
             <Route path="/about">
-              <h1>About</h1>
+              <About/>
             </Route>
             <Route exact path="/logout" render={() => {window.location.href="/logout"}} />
             <Route component={PageNotFound} />
