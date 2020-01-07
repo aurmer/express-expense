@@ -212,7 +212,7 @@ APP.use('/404', ensureAuth, express.static('public/app'));
 
 APP.get('/report', ensureAuth, (req, res) => {
 	let expensesToReport = [];
-	var testArray = [8,9]
+	var testArray = [4,5,6]
 	getExpenses(req.user).then(expenses => {
 		testArray
 			.map(id => {

@@ -5,7 +5,7 @@ function renderExpense(expense) {
         <td>${expense.receipt_name}</td>
         <td>${expense.amount}</td>
         <td>${expense.expense_date}</td>
-        <td>${expense.category_name}</td>
+        <td>${expense.bucket_name}</td>
     </tr>
     `;
 }
@@ -41,7 +41,7 @@ function renderExpenseImages(expense) {
     <td>${expense.receipt_name}</td>
     <td>${expense.amount}</td>
     <td>${expense.expense_date}</td>
-    <td>${expense.category_name}</td>
+    <td>${expense.bucket_name}</td>
 
     </tr>
     
