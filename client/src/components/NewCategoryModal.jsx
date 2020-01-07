@@ -26,7 +26,7 @@ const NewCategoryModal = () => {
   }
   const handleSave = e => {
     e.preventDefault()
-    postNewCategory(("add-category"), {bucket_name: bucketName})
+    postNewCategory(("/add-category"), {bucket_name: bucketName})
     setShow(false);
   }
   const handleShow = () => setShow(true);
