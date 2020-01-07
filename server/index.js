@@ -227,7 +227,7 @@ APP.post('/add-expense', ensureAuth, (req, res) => {
 	console.log('new expense for user: ', req.user);
 	postNewExpense(req.user, req.body).then(res.send(console.log('success')));
 });
-APP.get('/generate-report', ensureAuth, (req, res) => {
+APP.post('/generate-report', ensureAuth, (req, res) => {
 	console.log('new report request for user: ', req.user);
 	moveExpenseToPending(req.body);
 	res.send(console.log('generate-report post done'));
