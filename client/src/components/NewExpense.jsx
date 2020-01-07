@@ -59,8 +59,6 @@ class NewExpenseForm extends React.Component {
   }
 
   shouldUpdateCategories(data) {
-    console.log("~~data~~\n",data)
-      console.log("~~catagories~~\n",this.state.categories)
     if(oneDepthObjectEqual(data,this.state.categories)) {
       return false
     } else {
