@@ -1,0 +1,4 @@
+-   nginx/pm2 deployment on an Ubuntu server
+-   postgreSQL accessed using knex API and managed using knex migrations
+-   react app with redux and react-redux for state management
+-   leveraged components used from react-bootstrap and react-dragzone

@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { receiptLoaded } from '../redux/actions'
+import { oneDepthObjectEqual } from '../util-functions'
 
 import ReceiptUpload from './ReceiptUpload'
 
@@ -56,13 +57,28 @@ class NewExpenseForm extends React.Component {
       }
     }))
   }
-  fetchCategories() {
+
+  shouldUpdateCategories(data) {
+    console.log("~~data~~\n",data)
+      console.log("~~catagories~~\n",this.state.categories)
+    if(oneDepthObjectEqual(data,this.state.categories)) {
+      return false
+    } else {
+      return true
+    }
+  }
+
+  fetchCategories = () => {
     fetch("/get-categories")
     .then(response => response.json())
     .then(data => {
-        this.setState({ categories: data})
+        if(this.shouldUpdateCategories(data))
+        {
+          this.setState({ categories: data})
+        }
     })
   }
+
   renderCategories(categories) {
     return (
       <>
@@ -75,23 +91,16 @@ class NewExpenseForm extends React.Component {
       </>
     )
   }
+
   componentDidMount() {
     this.fetchCategories()
   }
+
+  componentDidUpdate() {
+    this.fetchCategories()
+  }
+
   render() {
-    // MAYBE REMOVE THIS? ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // const receipt_image_box = (
-    //   <>
-    //     <div className="box__input">
-    //       <input className="box__file" type="file" name="receipt" id="file" accept="image/*" />
-    //       <label htmlFor="file"><strong>Choose a file</strong><span className="box__dragndrop"> or drag it here</span>.</label>
-    //       <button className="box__button" type="submit">Upload</button>
-    //     </div>
-    //     <div className="box__uploading">Uploading&hellip;</div>
-    //     <div className="box__success">Done!</div>
-    //     <div className="box__error">Error! <span></span>.</div>
-    //   </>
-    // )
 
     return (
       <div>
@@ -118,7 +127,7 @@ class NewExpenseForm extends React.Component {
               </select>
             </div>
             <div className="add-category-btn-container">
-              <NewCategoryModal/>
+              <NewCategoryModal fetchCategories={this.fetchCategories}/>
             </div>
           </div>
           <Button

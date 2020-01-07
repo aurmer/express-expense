@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 
-const NewCategoryModal = () => {
+const NewCategoryModal = (props) => {
   const [show, setShow] = useState(false);
   const [bucketName, setBucketName] = useState('')
 
@@ -27,6 +27,7 @@ const NewCategoryModal = () => {
   const handleSave = e => {
     e.preventDefault()
     postNewCategory(("/add-category"), {bucket_name: bucketName})
+    .then(props.fetchCategories)
     setShow(false);
   }
   const handleShow = () => setShow(true);
