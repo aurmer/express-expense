@@ -52,15 +52,15 @@ class NewExpenseForm extends React.Component {
     return response
   }
   handleSubmit = (e) => {
-    e.preventDefault()
-    this.postNewExpense(("/add-expense"),
-      ({
-        receipt_name: this.state.newExpense.description,
-        amount: parseFloat(this.state.newExpense.amount),
-        expense_date: this.state.newExpense.date,
-        bucket_id: parseInt(this.state.newExpense.category),
-        imgFile: e.target.elements[0].files[0]
-      }))
+    // e.preventDefault()
+    // this.postNewExpense(("/add-expense"),
+    //   ({
+    //     receipt_name: this.state.newExpense.description,
+    //     amount: parseFloat(this.state.newExpense.amount),
+    //     expense_date: this.state.newExpense.date,
+    //     bucket_id: parseInt(this.state.newExpense.category),
+    //     imgFile: e.target.elements[0].files[0]
+    //   }))
     this.setState(prevState => ({
       newExpense: {
         description: '',
@@ -119,7 +119,7 @@ class NewExpenseForm extends React.Component {
 
     return (
       <div>
-        <form id="newExpenseForm" action="/add-expense" onSubmit={this.handleSubmit} className="go-bottom">
+        <form id="newExpenseForm" enctype="multipart/form-data" action="/add-expense" method="POST" className="go-bottom">
           <div className="form-input-container">
             <ReceiptUpload hackForce={Math.random()} />
           </div>

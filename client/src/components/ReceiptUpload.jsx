@@ -71,7 +71,7 @@ const ReceiptUpload = (props) => {
         <img alt="receipt" id="receiptImg" src={imageURLObj} style={imgTagStyles}/>
         <AspectRatioBox id="ahs-ar-box" width="200px" heightPercent="120%" show={dropzoneShow} >
           <div className="ahs-dropzone" {...getRootProps()}>
-            <input className="dropzone-input"  {...getInputProps()} />
+            <input className="dropzone-input"  {...getInputProps()} name="receipt-image" />
             <div className="text-center">
               {isDragActive ? (
                 <p className="dropzone-content">Release to drop the file.</p>

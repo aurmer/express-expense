@@ -4,6 +4,7 @@ const express = require('express');
 const session = require('express-session');
 var cors = require('cors');
 const util = require('util');
+const formidable = require('formidable')
 const APP = express();
 APP.use(cors());
 APP.use(express.json());
@@ -176,7 +177,7 @@ function deleteExpense(expenseId) {
 
 APP.get('*', (req, res, next) => {
 
-	// console.log("NEW REQUEST:\n",req.originalUrl);
+	 console.log("NEW REQUEST:\n",req.originalUrl);
 	next();
 });
 
@@ -223,9 +224,61 @@ APP.post('/add-category', ensureAuth, (req, res) => {
 			res.send(categories);
 		});
 });
+
+
+
+APP.post('/upload-img', ensureAuth, function(request, respond) {
+    var body = ''
+    filePath = __dirname + '/public/data.txt'
+    request.on('data', function(data) {
+        body += data
+    })
+
+    request.on('end', function (){
+			console.dir(body)
+      // fs.appendFile(filePath, body, function() {
+      //   respond.end()
+      // })
+    })
+})
+
+
 APP.post('/add-expense', ensureAuth, (req, res) => {
-	console.log('new expense for user: ', req.user);
-	postNewExpense(req.user, req.body).then(res.send(console.log('success')));
+	new formidable.IncomingForm().parse(req, (err, fields, files) => {
+		if (err) {
+			console.error('Error', err)
+			throw err
+		}
+		console.log('Fields', fields)
+		console.log('Files', files)
+		let myFile
+		for (const file of Object.entries(files)) {
+			console.log(file)
+			myFile = file[1]
+		}
+		console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",myFile)
+		const new_img_filename = `${new Date().getTime()} ${req.user}.${myFile.name.split('.').pop()}`
+		receipt_img_path = `public/uploaded-content/uploaded-receipts/${new_img_filename}`
+
+		const postBody = {
+					receipt_name: fields.description,
+					amount: parseFloat(fields.amount),
+					expense_date: fields.date,
+					bucket_id: parseInt(fields.category),
+					receipt_img_path: receipt_img_path
+		}
+
+		fs.writeFile(__dirname + receipt_img_path,myFile,(err) => {
+			console.log("file saving error",err)
+		})
+
+		console.log('new expense for user: ', req.user);
+		postNewExpense(req.user, postBody).then(res.send(console.log('success')));
+		res.redirect('/dashboard/')
+
+	})
+
+
 });
 APP.post('/generate-report', ensureAuth, (req, res) => {
 	console.log('new report request for user: ', req.user);
