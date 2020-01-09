@@ -16,3 +16,9 @@ export const oneDepthObjectEqual = (obj1,obj2) => {
   }
   return true
 }
+
+
+
+export const deepCopy = (oldObject) => {
+  return JSON.parse(JSON.stringify(oldObject))
+}

@@ -22,87 +22,83 @@ class NewExpenseForm extends React.Component {
     }
   }
   handleChange = (e) => {
-    const { name, value } = e.target
-    this.setState(prevState => ({
-      newExpense: {...prevState.newExpense, [name]: value}
-    }))
+    //REDUX THIS
+    // const { name, value } = e.target
+    // this.setState(prevState => ({
+    //   newExpense: {...prevState.newExpense, [name]: value}
+    // }))
   }
   async postNewExpense(url = '', data) {
-    const { imgFile, ...textFields } = data
-    const new_img_filename = `${textFields.expense_date} ${textFields.user_id}.${imgFile.name.split('.').pop()}`
-    textFields.receipt_img_path = `public/uploaded-content/uploaded-receipts/${new_img_filename}`
-    const response = await fetch(url, {
-      method: 'POST',
-      mode: 'cors',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(textFields)
-    })
-    const img_response = await fetch('/upload-img', { // Your POST endpoint
-        method: 'POST',
-        mode: 'cors',
-        credentials: 'include',
-        headers: {
-          "Content-Type": "multipart/form-data"
-        },
-        body: imgFile // This is your file object
-      })
-    return response
+    //REDUX THIS
+    // const { imgFile, ...textFields } = data
+    // const new_img_filename = `${textFields.expense_date} ${textFields.user_id}.${imgFile.name.split('.').pop()}`
+    // textFields.receipt_img_path = `public/uploaded-content/uploaded-receipts/${new_img_filename}`
+    // const response = await fetch(url, {
+    //   method: 'POST',
+    //   mode: 'cors',
+    //   credentials: 'include',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(textFields)
+    // })
+    // const img_response = await fetch('/upload-img', { // Your POST endpoint
+    //     method: 'POST',
+    //     mode: 'cors',
+    //     credentials: 'include',
+    //     headers: {
+    //       "Content-Type": "multipart/form-data"
+    //     },
+    //     body: imgFile // This is your file object
+    //   })
+    // return response
   }
   handleSubmit = (e) => {
-    // e.preventDefault()
-    // this.postNewExpense(("/add-expense"),
-    //   ({
-    //     receipt_name: this.state.newExpense.description,
-    //     amount: parseFloat(this.state.newExpense.amount),
-    //     expense_date: this.state.newExpense.date,
-    //     bucket_id: parseInt(this.state.newExpense.category),
-    //     imgFile: e.target.elements[0].files[0]
-    //   }))
-    this.setState(prevState => ({
-      newExpense: {
-        description: '',
-        amount: '',
-        date: '',
-        category: '',
-        img: '',
-      }
-    }))
-    window.location.href='/dashboard'
-  }
-
-  shouldUpdateCategories(data) {
-    if(oneDepthObjectEqual(data,this.state.categories)) {
-      return false
-    } else {
-      return true
+    e.preventDefault()
+    this.postNewExpense(("/add-expense"),
+      ({
+        receipt_name: this.state.newExpense.description,
+        amount: parseFloat(this.state.newExpense.amount),
+        expense_date: this.state.newExpense.date,
+        bucket_id: parseInt(this.state.newExpense.category),
+        imgFile: e.target.elements[0].files[0]
+      }))
+    //REDUX THIS
+    // this.setState(prevState => ({
+    //   newExpense: {
+    //     description: '',
+    //     amount: '',
+    //     date: '',
+    //     category: '',
+    //     img: '',
+    //   }
+    // }))
     }
-  }
 
   fetchCategories = () => {
-    fetch("/get-categories")
-    .then(response => response.json())
-    .then(data => {
-        if(this.shouldUpdateCategories(data))
-        {
-          this.setState({ categories: data})
-        }
-    })
+    //REDUX THIS
+    // fetch("/get-categories")
+    // .then(response => response.json())
+    // .then(data => {
+    //     if(this.shouldUpdateCategories(data))
+    //     {
+    //       this.setState({ categories: data})
+    //     }
+    // })
   }
 
   renderCategories(categories) {
-    return (
-      <>
-        <option value=''>Select a category</option>
-        {categories.map((category, index) => {
-          return (
-            <option value={category.id} key={index}>{category.bucket_name}</option>
-          )
-        })}
-      </>
-    )
+    //USE PROPS FROM REDUX
+    // return (
+    //   <>
+    //     <option value=''>Select a category</option>
+    //     {categories.map((category, index) => {
+    //       return (
+    //         <option value={category.id} key={index}>{category.bucket_name}</option>
+    //       )
+    //     })}
+    //   </>
+    // )
   }
 
   componentDidMount() {
