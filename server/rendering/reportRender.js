@@ -1,5 +1,5 @@
 function renderExpense(expense) {
-	return `
+  return `
     <tr>
         <th scope="row">${expense.id}</th>
         <td>${expense.receipt_name}</td>
@@ -11,7 +11,7 @@ function renderExpense(expense) {
 }
 
 function renderExpenseTable(expenses) {
-	return `
+  return `
         <table class="table">
         <thead>
         <tr>
@@ -31,7 +31,7 @@ function renderExpenseTable(expenses) {
 }
 
 function renderExpenseImages(expense) {
-	return `
+  return `
 
     <P style="page-break-after: always">
     <table class="table">
@@ -54,5 +54,5 @@ function renderExpenseImages(expense) {
 }
 
 module.exports = {
-	renderExpenseTable: renderExpenseTable,
+  renderExpenseTable: renderExpenseTable,
 };
