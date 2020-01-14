@@ -1,80 +1,83 @@
-body{
-  background-color: rgba(228, 252, 229, 0.250);
+body {
+  background-color: rgba(228, 252, 229, 0.25);
 }
 
 /* Nav Bar CSS */
 
 h3 {
-  margin: 0 auto
+  margin: 0 auto;
 }
 /* Login Logo CSS */
 
 #login-stacked-logo {
-  display: none !important
+  display: none !important;
 }
 #login-long-logo {
   display: block !important;
   margin: 60px auto;
-  width: 90vw
+  width: 90vw;
 }
 @media (max-width: 767px) {
   #login-stacked-logo {
     display: block !important;
     margin: 40px auto;
-    width: 80vw
-
+    width: 80vw;
   }
   #login-long-logo {
-    display: none !important
+    display: none !important;
   }
 }
 
 /* Login Button CSS */
 
 .btn {
-    font-weight: bold;
-    color: #fff;
-    background-color: var(--main-brand-color)
-  }
-  .btn:hover, .btn:focus, .btn.focus, .btn:active, .btn.active {
-    font-weight: bold;
-    color: #fff;
-    background-color: var(--main-brand-color-hover);
-    border-color: var(--main-brand-color)
-  }
-  .btn-primary:not(:disabled):not(.disabled).active,
-  .btn-primary:not(:disabled):not(.disabled):active {
-    color:#fff;
-    background-color: var(--main-brand-color);
-    border-color: var(--main-brand-color)
-  }
-  .btn-facebook {
-    background-color: rgb(59,89,152);
-    border-color: rgb(59,89,152)
-  }
-  .btn-facebook:hover {
-    background-color: rgb(59,89,152,.85);
-    border-color: rgb(59,89,152)
-  }
-  .btn-google {
-    background-color: rgb(66,133,244);
-    border-color: rgb(66,133,244)
-  }
-  .btn-google:hover {
-    background-color: rgb(66,133,244,.85);
-    border-color: rgb(66,133,244)
-  }
-  .btn-github {
-    background-color: rgb(23,21,21);
-    border-color: rgb(23,21,21)
-  }
-  .btn-github:hover {
-    background-color: rgb(23,21,21,.85);
-    border-color: rgb(23,21,21)
-  }
-  .card-header {
-    background-color: #336726;
-    color: white;
-    font-weight: bold;
-    text-align: center;
-  }
+  font-weight: bold;
+  color: #fff;
+  background-color: var(--main-brand-color);
+}
+.btn:hover,
+.btn:focus,
+.btn.focus,
+.btn:active,
+.btn.active {
+  font-weight: bold;
+  color: #fff;
+  background-color: var(--main-brand-color-hover);
+  border-color: var(--main-brand-color);
+}
+.btn-primary:not(:disabled):not(.disabled).active,
+.btn-primary:not(:disabled):not(.disabled):active {
+  color: #fff;
+  background-color: var(--main-brand-color);
+  border-color: var(--main-brand-color);
+}
+.btn-facebook {
+  background-color: rgb(59, 89, 152);
+  border-color: rgb(59, 89, 152);
+}
+.btn-facebook:hover {
+  background-color: rgb(59, 89, 152, 0.85);
+  border-color: rgb(59, 89, 152);
+}
+.btn-google {
+  background-color: rgb(66, 133, 244);
+  border-color: rgb(66, 133, 244);
+}
+.btn-google:hover {
+  background-color: rgb(66, 133, 244, 0.85);
+  border-color: rgb(66, 133, 244);
+}
+.btn-github {
+  background-color: rgb(23, 21, 21);
+  border-color: rgb(23, 21, 21);
+}
+.btn-github:hover {
+  background-color: rgb(23, 21, 21, 0.85);
+  border-color: rgb(23, 21, 21);
+}
+.card-header {
+  background-color: #336726;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+}

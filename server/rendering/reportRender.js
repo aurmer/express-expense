@@ -1,17 +1,17 @@
 function renderExpense(expense) {
-	return `
+  return `
     <tr>
         <th scope="row">${expense.id}</th>
         <td>${expense.receipt_name}</td>
         <td>${expense.amount}</td>
         <td>${expense.expense_date}</td>
-        <td>${expense.catagory_name}</td>
+        <td>${expense.bucket_name}</td>
     </tr>
     `;
 }
 
 function renderExpenseTable(expenses) {
-	return `
+  return `
         <table class="table">
         <thead>
         <tr>
@@ -19,7 +19,7 @@ function renderExpenseTable(expenses) {
             <th scope="col">Receipt Name</th>
             <th scope="col">Amount</th>
             <th scope="col">Date</th>
-            <th scope="col">Catagory Name</th>
+            <th scope="col">Category Name</th>
         </tr>
         </thead>
         <tbody>
@@ -31,7 +31,7 @@ function renderExpenseTable(expenses) {
 }
 
 function renderExpenseImages(expense) {
-	return `
+  return `
 
     <P style="page-break-after: always">
     <table class="table">
@@ -41,6 +41,8 @@ function renderExpenseImages(expense) {
     <td>${expense.receipt_name}</td>
     <td>${expense.amount}</td>
     <td>${expense.expense_date}</td>
+    <td>${expense.bucket_name}</td>
+
     </tr>
     
     <tr>
@@ -52,6 +54,5 @@ function renderExpenseImages(expense) {
 }
 
 module.exports = {
-	renderExpenseTable: renderExpenseTable,
-	renderExpenseImages: renderExpenseImages,
+  renderExpenseTable: renderExpenseTable,
 };
