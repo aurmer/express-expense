@@ -329,7 +329,7 @@ th:nth-child(4) {
   align-content: center;
 }
 .receipt-image {
-  max-width: 95%;
+  max-width:290px;
   margin: 0 auto;
 }
 #expenseTable thead {
