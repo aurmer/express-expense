@@ -5,9 +5,7 @@
 **Our Team**
 
 Joey Killam - https://github.com/jhkillam
-
 Taylor Blocker - https://github.com/TIBlock
-
 Aubrey Snider - https://github.com/aurmer
 
 
@@ -34,7 +32,7 @@ Aubrey Snider - https://github.com/aurmer
 
 
 <p>
-This project is still a work in progress at this time. We hope to fully implement uploading images and storing them in the database for user's to view and send as an expense sheet to thier respective clients or accounting teams.
+This project is still a work in progress at this time. We hope to fully implement uploading images and storing them in the database for user's to view and send as an expense sheet to their respective clients or accounting teams.
 </p>
 
 <p>
