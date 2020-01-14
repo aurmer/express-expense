@@ -4,8 +4,8 @@
 
 **Our Team**
 
-Joey Killam - https://github.com/jhkillam
-Taylor Blocker - https://github.com/TIBlock
+Joey Killam - https://github.com/jhkillam <br>
+Taylor Blocker - https://github.com/TIBlock <br>
 Aubrey Snider - https://github.com/aurmer
 
 
