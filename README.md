@@ -25,11 +25,11 @@ Aubrey Snider - https://github.com/aurmer
 
 
 <h3>OAuth Login</h3>
-<img style="width: 500px" src="./server/public/img/login.gif">
+<img style="width: 500px" src="https://media.giphy.com/media/JpeARj0vup1HItUOM6/giphy.gif">
 
 
 <h3>Example Mobile Expense Add</h3>
-<img style="width: 200px" src="./server/public/img/expense.gif">
+<img style="width: 200px" src="https://media.giphy.com/media/dYf4pB549NUTAJT9aU/giphy.gif">
 
 
 
