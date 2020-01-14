@@ -5,27 +5,25 @@
 **Our Team**
 
 Joey Killam - https://github.com/jhkillam
-
 Taylor Blocker - https://github.com/TIBlock
-
 Aubrey Snider - https://github.com/aurmer
 
 
 <h4>Some of the technologies employed in this project:</h4>
 
 - Using Javascript for the primary programming language.
-- Node.js server utilizing Express
+- Node.js server utilizing Express.
 - React app with Redux and React-Redux for state management.
-- Leveraged components used from React-Bootstrap and React-Dragzone
+- Leveraged components used from React-Bootstrap and React-Dragzone.
 - Passport.js, Google OAuth, Faceook OAuth for authentication.
-- NGINX/PM2 deployment on an Ubuntu server
-- PostgreSQL accessed using a Knex API and managed using Knex migrations
+- NGINX/PM2 deployment on an Ubuntu server.
+- PostgreSQL accessed using a Knex API and managed using Knex migrations.
 - Mustache rendering to create a printable expense report. 
-- HTML and CSS, as well as other Bootstrap styling. 
+- HTML with CSS and Bootstrap styling. 
 
 
 <h3>OAuth Login</h3>
-<img style="width: 500px" src="https://media.giphy.com/media/JpeARj0vup1HItUOM6/giphy.gif">
+<img style="width: 500px" src="https://media.giphy.com/media/VIDcoWoaKr9ggLS4Ul/giphy.gif">
 
 
 <h3>Example Mobile Expense Add</h3>
@@ -34,7 +32,7 @@ Aubrey Snider - https://github.com/aurmer
 
 
 <p>
-This project is still a work in progress at this time. We hope to fully implement uploading images and storing them in the database for user's to view and send as an expense sheet to thier respective clients or accounting teams.
+This project is still a work in progress at this time. We hope to fully implement uploading images and storing them in the database for user's to view and send as an expense sheet to their respective clients or accounting teams.
 </p>
 
 <p>
