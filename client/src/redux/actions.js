@@ -8,6 +8,6 @@ export const receiptLoaded = receiptURL => ({
   payload: { receiptURL }
 })
 
-export const nextLoadingModalRender = () -> ({
+export const nextLoadingModalRender = () => ({
   type: NEXT_LOADING
 })

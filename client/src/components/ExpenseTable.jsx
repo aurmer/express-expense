@@ -106,9 +106,9 @@ class ExpenseTable extends React.Component {
     // console.log('clicked delete expense id ' + expenseId + ' index ' + index)
     this.postDeleteExpense("/delete-expense", {id: expenseId})
     // console.log('expenses state ', this.state.expenses)
-    let initialState = this.deepCopy(this.state.expenses)
-    let updatedState = initialState.splice(index, 1)
-    this.setState({ expenses: updatedState })
+    let recordsState = this.deepCopy(this.state.expenses)
+    recordsState.splice(index, 1)
+    this.setState({ expenses: recordsState })
   }
   renderTable(expenses, status) {
     let checkboxName = "expenseToReport"
@@ -152,7 +152,7 @@ class ExpenseTable extends React.Component {
               >
                 <Dropdown.Menu>
                   <Dropdown.Item>
-                    <ReceiptModal/>
+                    <ReceiptModal receiptLink={expense.receipt_img_path}/>
                   </Dropdown.Item>
                   {/* <Dropdown.Item>
                     Edit

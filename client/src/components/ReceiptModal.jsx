@@ -2,7 +2,7 @@ import React from 'react'
 
 import Modal from 'react-bootstrap/Modal'
 
-const ReceiptModal= () => {
+const ReceiptModal= (props) => {
   const [show, setShow] = React.useState(false);
 
   const handleClose = () => setShow(false);
@@ -21,7 +21,7 @@ const ReceiptModal= () => {
         <Modal.Body
           className="receipt-image-container"
         >
-          <img className="receipt-image" alt="receipt" src="https://cdn2.thecatapi.com/images/dub.jpg"></img>
+          <img className="receipt-image" alt="receipt" src={props.receiptLink}></img>
         </Modal.Body>
       </Modal>
     </span>

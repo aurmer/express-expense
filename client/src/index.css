@@ -23,7 +23,7 @@ code {
 .nav-link {
 	display: flex;
 	padding: .5rem 1rem;
-	justify-content: end;
+	justify-content: flex-end;
 }
 #stacked-logo {
   display: none !important

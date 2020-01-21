@@ -11,6 +11,7 @@ APP.use(express.json());
 APP.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3000;
 const { db } = require('./db/dbConnection');
+const { fileUploadCallback } = require('./util-functions')
 const mustache = require('mustache')
 const passport = require('passport'),
 	FacebookStrategy = require('passport-facebook').Strategy,
@@ -166,6 +167,7 @@ function postNewExpense(userId, expense) {
 			},
 		]);
 }
+
 function deleteExpense(expenseId) {
 	return db('expense_item')
 		.where({ 'expense_item.id': expenseId })
@@ -185,6 +187,7 @@ APP.get('/', ensureAuth, (req,res,next) => {
 	res.redirect('/new-expense/');
 })
 
+APP.use('/app/manifest.json', express.static('public/app/manifest.json'));
 APP.use('/login', express.static('public/login'));
 APP.use('/privacy', express.static('public/privacy'));
 APP.use('/app', ensureAuth, express.static('public/app'));
@@ -192,6 +195,7 @@ APP.use('/new-expense', ensureAuth, express.static('public/app'));
 APP.use('/about', ensureAuth, express.static('public/app'))
 APP.use('/dashboard', ensureAuth, express.static('public/app'))
 APP.use('/404', ensureAuth, express.static('public/app'))
+APP.use('/public', express.static('public'))
 
 
 
@@ -225,56 +229,51 @@ APP.post('/add-category', ensureAuth, (req, res) => {
 		});
 });
 
-
-
-APP.post('/upload-img', ensureAuth, function(request, respond) {
-    var body = ''
-    filePath = __dirname + '/public/data.txt'
-    request.on('data', function(data) {
-        body += data
-    })
-
-    request.on('end', function (){
-			console.dir(body)
-      // fs.appendFile(filePath, body, function() {
-      //   respond.end()
-      // })
-    })
-})
-
-
 APP.post('/add-expense', ensureAuth, (req, res) => {
-	new formidable.IncomingForm().parse(req, (err, fields, files) => {
-		if (err) {
-			console.error('Error', err)
-			throw err
-		}
-		console.log('Fields', fields)
-		console.log('Files', files)
-		let myFile
-		for (const file of Object.entries(files)) {
-			console.log(file)
-			myFile = file[1]
-		}
-		console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",myFile)
-		const new_img_filename = `${new Date().getTime()} ${req.user}.${myFile.name.split('.').pop()}`
-		receipt_img_path = `public/uploaded-content/uploaded-receipts/${new_img_filename}`
+	let form = new formidable.IncomingForm()
+	let fileUpload = null
+	let formFields = null
 
-		const postBody = {
-					receipt_name: fields.description,
-					amount: parseFloat(fields.amount),
-					expense_date: fields.date,
-					bucket_id: parseInt(fields.category),
-					receipt_img_path: receipt_img_path
-		}
+	const timeStamp = new Date().getTime()
+	const userID = req.user
+	let fileUploadPath = null
 
-		fs.writeFile(__dirname + receipt_img_path,myFile,(err) => {
-			console.log("file saving error",err)
+	form.parse(req, function(err, fields, files) {
+			formFields = fields
 		})
 
-		console.log('new expense for user: ', req.user);
-		postNewExpense(req.user, postBody).then(res.send(console.log('success')));
-		res.redirect('/dashboard/')
+	form.on('error', (err) => {
+		console.log('Form Post error: ',err)
+	})
+
+	form.on('fileBegin', (name,tempFile) => {
+		fileUploadPath = `public/uploaded-content/uploaded-receipts/${timeStamp}_${userID}_${tempFile.name}`
+		tempFile.path = fileUploadPath
+		if(name === 'receipt-image') {
+			fileUpload = tempFile
+		}
+	})
+
+	form.on('end', () => {
+		console.log('~~new expense received~~')
+
+		console.dir(fileUpload)
+		fs.writeFile(__dirname + fileUploadPath,fileUpload,fileUploadCallback)
+
+
+		const postBody = {
+					receipt_name: formFields.description,
+					amount: parseFloat(formFields.amount),
+					expense_date: formFields.date,
+					bucket_id: parseInt(formFields.category),
+					receipt_img_path: ('/' + fileUploadPath)
+		}
+
+		console.log('new expense for user: ', req.user)
+		postNewExpense(req.user, postBody).then( () => {
+			console.log('success')
+			res.send('expense posted successfully')
+		})
 
 	})
 

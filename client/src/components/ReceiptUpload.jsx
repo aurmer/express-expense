@@ -26,7 +26,7 @@ const ReceiptUpload = (props) => {
       maxSize: MAX_FILE_SIZE,
       onDrop: (e) => {
         if(e[0]) {
-          const myImg = document.getElementById('receiptImg')
+          // const myImg = document.getElementById('receiptImg')
           handleSubmitImage(true)
           handleImageURLObj(URL.createObjectURL(e[0]))
         }

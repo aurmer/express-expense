@@ -23,82 +23,78 @@ class NewExpenseForm extends React.Component {
   }
   handleChange = (e) => {
     //REDUX THIS
-    // const { name, value } = e.target
-    // this.setState(prevState => ({
-    //   newExpense: {...prevState.newExpense, [name]: value}
-    // }))
+    const { name, value } = e.target
+    this.setState(prevState => ({
+      newExpense: {...prevState.newExpense, [name]: value}
+    }))
   }
   async postNewExpense(url = '', data) {
     //REDUX THIS
-    // const { imgFile, ...textFields } = data
-    // const new_img_filename = `${textFields.expense_date} ${textFields.user_id}.${imgFile.name.split('.').pop()}`
-    // textFields.receipt_img_path = `public/uploaded-content/uploaded-receipts/${new_img_filename}`
-    // const response = await fetch(url, {
-    //   method: 'POST',
-    //   mode: 'cors',
-    //   credentials: 'include',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify(textFields)
-    // })
-    // const img_response = await fetch('/upload-img', { // Your POST endpoint
-    //     method: 'POST',
-    //     mode: 'cors',
-    //     credentials: 'include',
-    //     headers: {
-    //       "Content-Type": "multipart/form-data"
-    //     },
-    //     body: imgFile // This is your file object
-    //   })
-    // return response
+    const response = await fetch(url, {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include',
+      body: data
+    })
+
+    return response
   }
   handleSubmit = (e) => {
     e.preventDefault()
-    this.postNewExpense(("/add-expense"),
-      ({
-        receipt_name: this.state.newExpense.description,
-        amount: parseFloat(this.state.newExpense.amount),
-        expense_date: this.state.newExpense.date,
-        bucket_id: parseInt(this.state.newExpense.category),
-        imgFile: e.target.elements[0].files[0]
-      }))
+    const newExpenseForm = document.getElementById('newExpenseForm')
+    this.postNewExpense(("/add-expense"), new FormData(newExpenseForm)
+      // ({
+      //   receipt_name: this.state.newExpense.description,
+      //   amount: parseFloat(this.state.newExpense.amount),
+      //   expense_date: this.state.newExpense.date,
+      //   bucket_id: parseInt(this.state.newExpense.category),
+      //   imgFile: e.target.elements[0].files[0]
+      // })
+    )
     //REDUX THIS
-    // this.setState(prevState => ({
-    //   newExpense: {
-    //     description: '',
-    //     amount: '',
-    //     date: '',
-    //     category: '',
-    //     img: '',
-    //   }
-    // }))
+    this.setState(prevState => ({
+      newExpense: {
+        description: '',
+        amount: '',
+        date: '',
+        category: '',
+        img: '',
+      }
+    }))
     }
+
+  shouldUpdateCategories(data) {
+    if(oneDepthObjectEqual(data,this.state.categories)) {
+      return false
+    } else {
+      return true
+    }
+  }
 
   fetchCategories = () => {
     //REDUX THIS
-    // fetch("/get-categories")
-    // .then(response => response.json())
-    // .then(data => {
-    //     if(this.shouldUpdateCategories(data))
-    //     {
-    //       this.setState({ categories: data})
-    //     }
-    // })
+    fetch("/get-categories")
+    .then(response => response.json())
+    .then(data => {
+        if(this.shouldUpdateCategories(data))
+        {
+          this.setState({ categories: data})
+        }
+    })
   }
 
   renderCategories(categories) {
     //USE PROPS FROM REDUX
-    // return (
-    //   <>
-    //     <option value=''>Select a category</option>
-    //     {categories.map((category, index) => {
-    //       return (
-    //         <option value={category.id} key={index}>{category.bucket_name}</option>
-    //       )
-    //     })}
-    //   </>
-    // )
+    return (
+      <>
+        <option value=''>Select a category</option>
+        {categories.map((category, index) => {
+          return (
+            <option value={category.id} key={index}>{category.bucket_name}</option>
+          )
+        })}
+      </>
+    )
   }
 
   componentDidMount() {
@@ -115,7 +111,7 @@ class NewExpenseForm extends React.Component {
 
     return (
       <div>
-        <form id="newExpenseForm" enctype="multipart/form-data" action="/add-expense" method="POST" className="go-bottom">
+        <form id="newExpenseForm" encType="multipart/form-data" action="/add-expense" method="POST" onSubmit={this.handleSubmit} className="go-bottom">
           <div className="form-input-container">
             <ReceiptUpload hackForce={Math.random()} />
           </div>
