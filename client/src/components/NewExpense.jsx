@@ -17,7 +17,8 @@ class NewExpenseForm extends React.Component {
         description: '',
         amount: '',
         date: '',
-        category: 'test'
+        category: '',
+        img: '',
       }
     }
   }
@@ -48,7 +49,7 @@ class NewExpenseForm extends React.Component {
         amount: '',
         date: '',
         category: '',
-        img: '',
+        img: ''
       }
     }))
     }
@@ -93,7 +94,13 @@ class NewExpenseForm extends React.Component {
     this.fetchCategories()
   }
 
-
+  addImage = (imageURLObj) => {
+    this.setState(
+      {newExpense: {
+        ...this.state.newExpense,
+        img:imageURLObj
+      }})
+  }
 
   render() {
 
@@ -101,7 +108,7 @@ class NewExpenseForm extends React.Component {
       <div>
         <form id="newExpenseForm" action="/add-expense" onSubmit={this.handleSubmit} className="go-bottom">
           <div className="form-input-container">
-            <ReceiptUpload hackForce={Math.random()} />
+            <ReceiptUpload image={this.state.newExpense.img} addImage={this.addImage} />
           </div>
           <div className="form-input-container">
             <input onChange={this.handleChange} id="description" name="description" type="text" value={this.state.newExpense.description} required/>
