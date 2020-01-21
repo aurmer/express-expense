@@ -1,48 +1,46 @@
 // Update with your config settings.
 
 module.exports = {
-
   development: {
     client: 'pg',
-    connection: "postgres://localhost/expense_database",
+    connection: 'postgres://localhost/expense_database',
     migrations: {
       directory: __dirname + '/knex/migrations',
     },
     seeds: {
-      directory: __dirname + '/knex/seeds'
-    }
+      directory: __dirname + '/knex/seeds',
+    },
   },
 
   aubrey_dev: {
     client: 'pg',
     connection: {
       database: 'expense_database',
-      user:     'postgres',
-      password: 'postgres'
+      user: 'postgres',
+      password: 'postgres',
     },
     migrations: {
       directory: __dirname + '/knex/migrations',
     },
     seeds: {
-      directory: __dirname + '/knex/seeds'
-    }
+      directory: __dirname + '/knex/seeds',
+    },
   },
 
   production: {
     client: 'pg',
     connection: {
       database: 'expense_database',
-      user:     'postgres',
-      password: 'yearight'
+      user: 'postgres',
+      password: 'yearight',
     },
     migrations: {
       directory: __dirname + '/knex/migrations',
     },
     seeds: {
-      directory: __dirname + '/knex/seeds'
-    }
+      directory: __dirname + '/knex/seeds',
+    },
   },
-
 
   // staging: {
   //   client: 'pg',
@@ -75,5 +73,4 @@ module.exports = {
   //     tableName: 'knex_migrations'
   //   }
   // }
-
 };
