@@ -179,7 +179,7 @@ function deleteExpense(expenseId) {
 
 APP.get('*', (req, res, next) => {
 
-	 console.log("NEW REQUEST:\n",req.originalUrl);
+	 // console.log("NEW REQUEST:\n",req.originalUrl);
 	next();
 });
 

@@ -22,14 +22,12 @@ class NewExpenseForm extends React.Component {
     }
   }
   handleChange = (e) => {
-    //REDUX THIS
     const { name, value } = e.target
     this.setState(prevState => ({
       newExpense: {...prevState.newExpense, [name]: value}
     }))
   }
   async postNewExpense(url = '', data) {
-    //REDUX THIS
     const response = await fetch(url, {
       method: 'POST',
       mode: 'cors',
@@ -43,15 +41,7 @@ class NewExpenseForm extends React.Component {
     e.preventDefault()
     const newExpenseForm = document.getElementById('newExpenseForm')
     this.postNewExpense(("/add-expense"), new FormData(newExpenseForm)
-      // ({
-      //   receipt_name: this.state.newExpense.description,
-      //   amount: parseFloat(this.state.newExpense.amount),
-      //   expense_date: this.state.newExpense.date,
-      //   bucket_id: parseInt(this.state.newExpense.category),
-      //   imgFile: e.target.elements[0].files[0]
-      // })
     )
-    //REDUX THIS
     this.setState(prevState => ({
       newExpense: {
         description: '',
@@ -72,7 +62,6 @@ class NewExpenseForm extends React.Component {
   }
 
   fetchCategories = () => {
-    //REDUX THIS
     fetch("/get-categories")
     .then(response => response.json())
     .then(data => {
@@ -84,7 +73,6 @@ class NewExpenseForm extends React.Component {
   }
 
   renderCategories(categories) {
-    //USE PROPS FROM REDUX
     return (
       <>
         <option value=''>Select a category</option>
@@ -111,7 +99,7 @@ class NewExpenseForm extends React.Component {
 
     return (
       <div>
-        <form id="newExpenseForm" encType="multipart/form-data" action="/add-expense" method="POST" onSubmit={this.handleSubmit} className="go-bottom">
+        <form id="newExpenseForm" action="/add-expense" onSubmit={this.handleSubmit} className="go-bottom">
           <div className="form-input-container">
             <ReceiptUpload hackForce={Math.random()} />
           </div>
