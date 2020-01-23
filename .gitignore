@@ -26,7 +26,7 @@ client/yarn-error.log*
 client/build
 
 server/public/app
-server/public/uploaded-content/uploaded-receipts
+server/public/uploaded-content/uploaded-receipts/*
 server/node_modules
 server/googleCredentials.js
 
