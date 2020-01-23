@@ -12,6 +12,7 @@ APP.use(express.json());
 APP.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3000;
 const { db } = require('./db/dbConnection');
+require('./init.js')
 const { fileUploadCallback } = require('./util-functions')
 const mustache = require('mustache');
 const {
