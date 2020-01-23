@@ -7,7 +7,6 @@ import Table from 'react-bootstrap/Table'
 import Dropdown from 'react-bootstrap/Dropdown'
 import Button from 'react-bootstrap/Button'
 
-import ReceiptModal from './ReceiptModal'
 
 class ExpenseTable extends React.Component {
   constructor(props) {
@@ -16,8 +15,10 @@ class ExpenseTable extends React.Component {
         isFetching: false,
         expenses: [],
         expensesToReport: [],
-        expensesPaid: []
+        expensesPaid: [],
+        receiptModalShowing: ""
     };
+    console.log("state: ",this.state)
   }
   deepCopy (oldObject) {
     return JSON.parse(JSON.stringify(oldObject))
@@ -26,7 +27,7 @@ class ExpenseTable extends React.Component {
     fetch("/get-expenses")
       .then(response => response.json())
       .then(data => {
-        this.setState({ expenses: data})
+        this.setState({expenses: data})
       })
   }
   async postExpensesToGenerateReport(url = '', data) {
@@ -102,14 +103,34 @@ class ExpenseTable extends React.Component {
     this.postExpensesAsPaid("/mark-as-paid", this.state.expensesPaid)
     .then(this.fetchExpenses)
   }
-  deleteExpense = (expenseId, index) => {
-    // console.log('clicked delete expense id ' + expenseId + ' index ' + index)
-    this.postDeleteExpense("/delete-expense", {id: expenseId})
-    // console.log('expenses state ', this.state.expenses)
-    let recordsState = this.deepCopy(this.state.expenses)
-    recordsState.splice(index, 1)
-    this.setState({ expenses: recordsState })
+  allNotMatchingId(expenseId,expense) {
+    console.log(expenseId)
+    return (expense.id !== expenseId)
   }
+  deleteExpense = (expenseId) => {
+    this.postDeleteExpense("/delete-expense", {id: expenseId})
+    let expenseRecords = this.deepCopy(this.state.expenses)
+    //filter the recordsState for anything not matching expenseID. then return the filtered set
+    expenseRecords = expenseRecords.filter(this.allNotMatchingId.bind(null,expenseId))
+    this.setState({ expenses: expenseRecords })
+  }
+
+  handleReceiptModalShow = (index) => {
+    console.log('clicked: ' + index)
+    this.setState({receiptModalShowing: index})
+  }
+
+  handleReceiptModalHide = () => {
+    this.setState({receiptModalShowing: null})
+  }
+
+  testfunc = function(expense) {
+    console.log(this.state.receiptModalShowing)
+    console.log(expense.id)
+    console.log((this.state.receiptModalShowing === expense.id))
+    return (this.state.receiptModalShowing === expense.id)
+  }
+
   renderTable(expenses, status) {
     let checkboxName = "expenseToReport"
     let onChangeFunction = this.handleCheckboxesToReport
@@ -129,10 +150,11 @@ class ExpenseTable extends React.Component {
       checkboxName = ""
       onChangeFunction = null
     }
+
     return (
       <tbody>
         {statusSortedExpenses.map((expense, index) => (
-          <tr key={index}>
+          <tr key={expense.id}>
           <td>
             {expense.bucket_name}
             <input type="checkbox" style={checkboxDisplayStyle} name={checkboxName} value={expense.id} onChange={onChangeFunction}></input>
@@ -151,13 +173,13 @@ class ExpenseTable extends React.Component {
                 variant="secondary"
               >
                 <Dropdown.Menu>
-                  <Dropdown.Item>
-                    <ReceiptModal receiptLink={expense.receipt_img_path}/>
+                  <Dropdown.Item onClick={() => this.props.showReceiptModal(expense.receipt_img_path)}>
+                    Receipt
                   </Dropdown.Item>
                   {/* <Dropdown.Item>
                     Edit
                   </Dropdown.Item> */}
-                  <Dropdown.Item onClick={() => (this.deleteExpense(expense.id, index))}>
+                  <Dropdown.Item onClick={() => (this.deleteExpense(expense.id))}>
                     Delete
                   </Dropdown.Item>
                 </Dropdown.Menu>

@@ -4,6 +4,7 @@ const express = require('express');
 const session = require('express-session');
 var cors = require('cors');
 const util = require('util');
+const path = require('path');
 const formidable = require('formidable')
 const APP = express();
 APP.use(cors());
@@ -263,7 +264,7 @@ APP.post('/add-category', ensureAuth, (req, res) => {
 });
 
 APP.post('/add-expense', ensureAuth, (req, res) => {
-  
+
 	let form = new formidable.IncomingForm()
 	let fileUpload = null
 	let formFields = null
@@ -291,8 +292,9 @@ APP.post('/add-expense', ensureAuth, (req, res) => {
 	form.on('end', () => {
 		console.log('~~new expense received~~')
 
-		console.dir(fileUpload)
-		fs.writeFile(__dirname + fileUploadPath,fileUpload,fileUploadCallback)
+		console.dir(__dirname + fileUploadPath)
+
+		fs.writeFile((__dirname + fileUploadPath),fileUpload,fileUploadCallback)
 
 
 		const postBody = {
