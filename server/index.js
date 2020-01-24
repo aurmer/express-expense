@@ -283,7 +283,7 @@ APP.post('/add-expense', ensureAuth, (req, res) => {
 	})
 
 	form.on('fileBegin', (name,tempFile) => {
-		fileUploadPath = `public/uploaded-content/uploaded-receipts/${timeStamp}_${userID}_${tempFile.name}`
+		fileUploadPath = `/public/uploaded-content/uploaded-receipts/${timeStamp}_${userID}_${tempFile.name}`
 		tempFile.path = fileUploadPath
 		if(name === 'receipt-image') {
 			fileUpload = tempFile
@@ -293,8 +293,6 @@ APP.post('/add-expense', ensureAuth, (req, res) => {
 	form.on('end', () => {
 		console.log('~~new expense received~~')
 
-		console.dir(__dirname + fileUploadPath)
-
 		fs.writeFile((__dirname + fileUploadPath),fileUpload,fileUploadCallback)
 
 
@@ -303,7 +301,7 @@ APP.post('/add-expense', ensureAuth, (req, res) => {
 					amount: parseFloat(formFields.amount),
 					expense_date: formFields.date,
 					bucket_id: parseInt(formFields.category),
-					receipt_img_path: ('/' + fileUploadPath)
+					receipt_img_path: (fileUploadPath)
 		}
 
 		console.log('new expense for user: ', req.user)
