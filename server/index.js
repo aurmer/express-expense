@@ -267,7 +267,6 @@ APP.post('/add-category', ensureAuth, (req, res) => {
 APP.post('/add-expense', ensureAuth, (req, res) => {
 
 	let form = new formidable.IncomingForm()
-	let fileUpload = null
 	let formFields = null
 
 	const timeStamp = new Date().getTime()
@@ -282,19 +281,13 @@ APP.post('/add-expense', ensureAuth, (req, res) => {
 		console.log('Form Post error: ',err)
 	})
 
-	form.on('fileBegin', (name,tempFile) => {
-		fileUploadPath = `/public/uploaded-content/uploaded-receipts/${timeStamp}_${userID}_${tempFile.name}`
-		tempFile.path = fileUploadPath
-		if(name === 'receipt-image') {
-			fileUpload = tempFile
-		}
+	form.on('fileBegin', (name,file) => {
+		fileUploadPath = `public/uploaded-content/uploaded-receipts/${timeStamp}_${userID}_${file.name}`
+		file.path = fileUploadPath
 	})
 
 	form.on('end', () => {
 		console.log('~~new expense received~~')
-
-		fs.writeFile((__dirname + fileUploadPath),fileUpload,fileUploadCallback)
-
 
 		const postBody = {
 					receipt_name: formFields.description,
