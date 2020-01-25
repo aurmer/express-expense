@@ -1,12 +1,15 @@
 import React from 'react'
 
 import ExpenseTable from './ExpenseTable'
+import ReceiptModal from './ReceiptModal'
 
 class Dashboard extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      greeting: ""
+      greeting: "",
+      showReceiptModal: false,
+      receiptModalSrcLink: ""
     }
   }
   fetchUserName() {
@@ -20,11 +23,29 @@ class Dashboard extends React.Component {
     this.fetchUserName()
   }
 
+  handleReceiptModalHide = () => {
+    this.setState({
+      showReceiptModal: false,
+      receiptModalSrcLink: ""
+    })
+  }
+
+  handleShowReceiptModal = (receiptLink) => {
+      this.setState({
+        showReceiptModal: true,
+        receiptModalSrcLink: receiptLink
+      })
+  }
+
   render() {
     return (
       <div>
         <h1>{this.state.greeting}</h1>
-        <ExpenseTable/>
+        {
+          this.state.showReceiptModal &&
+          <ReceiptModal show={true} hideModalCallback={this.handleReceiptModalHide} receiptLink={this.state.receiptModalSrcLink}/>
+        }
+        <ExpenseTable showReceiptModal={this.handleShowReceiptModal} />
       </div>
     )
   }

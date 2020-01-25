@@ -17,7 +17,8 @@ class NewExpenseForm extends React.Component {
         description: '',
         amount: '',
         date: '',
-        category: 'test'
+        category: '',
+        img: '',
       }
     }
   }
@@ -28,50 +29,30 @@ class NewExpenseForm extends React.Component {
     }))
   }
   async postNewExpense(url = '', data) {
-    const { imgFile, ...textFields } = data
-    const new_img_filename = `${textFields.expense_date} ${textFields.user_id}.${imgFile.name.split('.').pop()}`
-    textFields.receipt_img_path = `public/uploaded-content/uploaded-receipts/${new_img_filename}`
     const response = await fetch(url, {
       method: 'POST',
       mode: 'cors',
       credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(textFields)
+      body: data
     })
-    const img_response = await fetch('/upload-img', { // Your POST endpoint
-        method: 'POST',
-        mode: 'cors',
-        credentials: 'include',
-        headers: {
-          "Content-Type": "multipart/form-data"
-        },
-        body: imgFile // This is your file object
-      })
+
     return response
   }
   handleSubmit = (e) => {
     e.preventDefault()
-    this.postNewExpense(("/add-expense"),
-      ({
-        receipt_name: this.state.newExpense.description,
-        amount: parseFloat(this.state.newExpense.amount),
-        expense_date: this.state.newExpense.date,
-        bucket_id: parseInt(this.state.newExpense.category),
-        imgFile: e.target.elements[0].files[0]
-      }))
+    const newExpenseForm = document.getElementById('newExpenseForm')
+    this.postNewExpense(("/add-expense"), new FormData(newExpenseForm)
+    )
     this.setState(prevState => ({
       newExpense: {
         description: '',
         amount: '',
         date: '',
         category: '',
-        img: '',
+        img: ''
       }
     }))
-    window.location.href='/dashboard'
-  }
+    }
 
   shouldUpdateCategories(data) {
     if(oneDepthObjectEqual(data,this.state.categories)) {
@@ -113,7 +94,13 @@ class NewExpenseForm extends React.Component {
     this.fetchCategories()
   }
 
-
+  addImage = (imageURLObj) => {
+    this.setState(
+      {newExpense: {
+        ...this.state.newExpense,
+        img:imageURLObj
+      }})
+  }
 
   render() {
 
@@ -121,7 +108,7 @@ class NewExpenseForm extends React.Component {
       <div>
         <form id="newExpenseForm" action="/add-expense" onSubmit={this.handleSubmit} className="go-bottom">
           <div className="form-input-container">
-            <ReceiptUpload hackForce={Math.random()} />
+            <ReceiptUpload image={this.state.newExpense.img} addImage={this.addImage} />
           </div>
           <div className="form-input-container">
             <input onChange={this.handleChange} id="description" name="description" type="text" value={this.state.newExpense.description} required/>

@@ -11,24 +11,23 @@ const ALLOWED_FILE_TYPES = [
 
 const KiB = 1024
 const MiB = KiB*1024
-const MAX_FILE_SIZE = 20*MiB
+const MAX_FILE_SIZE = 10*MiB
+
+function updateImage(e) {
+  document.getElementsByName('receipt-image')[0].click()
+}
 
 const ReceiptUpload = (props) => {
-    const [imageSubmitted, updateImageSubmitted] = useState(false)
-    const handleSubmitImage = () => updateImageSubmitted(true)
-
-    const [imageURLObj, updateImageURLObj] = useState("")
-    const handleImageURLObj = (ob) => updateImageURLObj(ob)
-
+  
     // Initializing useDropzone hooks with options
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
       allow: ALLOWED_FILE_TYPES,
       maxSize: MAX_FILE_SIZE,
-      onDrop: (e) => {
-        if(e[0]) {
-          const myImg = document.getElementById('receiptImg')
-          handleSubmitImage(true)
-          handleImageURLObj(URL.createObjectURL(e[0]))
+      onDrop: (ev) => {
+        if(ev[0]) {
+          props.addImage(URL.createObjectURL(ev[0]))
+          // handleSubmitImage(true)
+          // addImageURLObj()
         }
       },
       onDrag: null,
@@ -37,14 +36,14 @@ const ReceiptUpload = (props) => {
       onDragLeave: null,
       onDragOver: null,
       onDropAccepted: null,
-      onDropRejected: (e) => {
-        const rejectedFile = e[0]
+      onDropRejected: (ev) => {
+        const rejectedFile = ev[0]
         if(rejectedFile) {
           if(ALLOWED_FILE_TYPES.includes(rejectedFile.type) === false) {
             alert('your file must be a supported image')
           }
           else if(rejectedFile.size > MAX_FILE_SIZE) {
-            alert('your file is too large. 20MiB limit.')
+            alert('your file is too large. 10MiB limit.')
           }
         }
       },
@@ -54,7 +53,7 @@ const ReceiptUpload = (props) => {
     })
 
     let imgTagStyles, dropzoneShow
-    if(imageSubmitted) {
+    if(props.image) {
       imgTagStyles = {
         display:"block"
       }
@@ -66,12 +65,16 @@ const ReceiptUpload = (props) => {
       dropzoneShow = true
     }
 
+    const updateParentState = (e) => {
+      props.addImage(URL.createObjectURL(e.target.files[0]))
+    }
+
     return (
       <>
-        <img alt="receipt" id="receiptImg" src={imageURLObj} style={imgTagStyles}/>
+        <img alt="receipt" id="receiptImg" src={props.image} style={imgTagStyles} onClick={updateImage}/>
         <AspectRatioBox id="ahs-ar-box" width="200px" heightPercent="120%" show={dropzoneShow} >
           <div className="ahs-dropzone" {...getRootProps()}>
-            <input className="dropzone-input"  {...getInputProps()} />
+            <input className="dropzone-input"  {...getInputProps()} name="receipt-image" onChange={updateParentState} />
             <div className="text-center">
               {isDragActive ? (
                 <p className="dropzone-content">Release to drop the file.</p>

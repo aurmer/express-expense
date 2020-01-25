@@ -24,9 +24,9 @@ code {
   font-weight: bold;
 }
 .nav-link {
-  display: flex;
-  padding: 0.5rem 1rem;
-  justify-content: end;
+	display: flex;
+	padding: .5rem 1rem;
+	justify-content: flex-end;
 }
 #stacked-logo {
   display: none !important;

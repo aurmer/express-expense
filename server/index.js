@@ -4,12 +4,16 @@ const express = require('express');
 const session = require('express-session');
 var cors = require('cors');
 const util = require('util');
+const path = require('path');
+const formidable = require('formidable')
 const APP = express();
 APP.use(cors());
 APP.use(express.json());
 APP.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3000;
 const { db } = require('./db/dbConnection');
+require('./init.js')
+const { fileUploadCallback } = require('./util-functions')
 const mustache = require('mustache');
 const {
   renderExpenseImages,
@@ -181,6 +185,7 @@ function postNewExpense(userId, expense) {
       },
     ]);
 }
+
 function deleteExpense(expenseId) {
   return db('expense_item')
     .where({ 'expense_item.id': expenseId })
@@ -191,22 +196,24 @@ function deleteExpense(expenseId) {
 // SERVER API ROUTES
 
 APP.get('*', (req, res, next) => {
-  console.log('NEW REQUEST:\n', req.originalUrl);
-  next();
+  console.log("NEW REQUEST:\n",req.originalUrl);
+	next();
 });
 
 APP.get('/', ensureAuth, (req, res, next) => {
   res.redirect('/new-expense/');
 });
 
+APP.use('/app/manifest.json', express.static('public/app/manifest.json'));
 APP.use('/login', express.static('public/login'));
 APP.use('/privacy', express.static('public/privacy'));
 APP.use('/app', ensureAuth, express.static('public/app'));
 APP.use('/new-expense', ensureAuth, express.static('public/app'));
-APP.use('/about', ensureAuth, express.static('public/app'));
-APP.use('/dashboard', ensureAuth, express.static('public/app'));
+APP.use('/about', ensureAuth, express.static('public/app'))
+APP.use('/dashboard', ensureAuth, express.static('public/app'))
 APP.use('/generate-report', ensureAuth, express.static('public/app'));
-APP.use('/404', ensureAuth, express.static('public/app'));
+APP.use('/404', ensureAuth, express.static('public/app'))
+APP.use('/public', express.static('public'))
 
 // DATABASE API ROUTES
 
@@ -256,9 +263,47 @@ APP.post('/add-category', ensureAuth, (req, res) => {
       res.send(categories);
     });
 });
+
 APP.post('/add-expense', ensureAuth, (req, res) => {
-  console.log('new expense for user: ', req.user);
-  postNewExpense(req.user, req.body).then(res.send(console.log('success')));
+
+	let form = new formidable.IncomingForm()
+	let formFields = null
+
+	const timeStamp = new Date().getTime()
+	const userID = req.user
+	let fileUploadPath = null
+
+	form.parse(req, function(err, fields, files) {
+			formFields = fields
+		})
+
+	form.on('error', (err) => {
+		console.log('Form Post error: ',err)
+	})
+
+	form.on('fileBegin', (name,file) => {
+		fileUploadPath = `public/uploaded-content/uploaded-receipts/${timeStamp}_${userID}_${file.name}`
+		file.path = fileUploadPath
+	})
+
+	form.on('end', () => {
+		console.log('~~new expense received~~')
+
+		const postBody = {
+					receipt_name: formFields.description,
+					amount: parseFloat(formFields.amount),
+					expense_date: formFields.date,
+					bucket_id: parseInt(formFields.category),
+					receipt_img_path: (fileUploadPath)
+		}
+
+		console.log('new expense for user: ', req.user)
+		postNewExpense(req.user, postBody).then( () => {
+			console.log('success')
+			res.send('expense posted successfully')
+		})
+
+	})
 });
 APP.post('/generate-report', ensureAuth, (req, res) => {
   console.log('new report request for user: ', req.user);

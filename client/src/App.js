@@ -8,7 +8,6 @@ import Dashboard from './components/Dashboard'
 import PageNotFound from './components/PageNotFound'
 import About from './components/About'
 
-require('dotenv').config();
 
 function App() {
   return (
